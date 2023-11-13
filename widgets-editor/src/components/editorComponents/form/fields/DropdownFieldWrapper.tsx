@@ -1,6 +1,6 @@
-import Dropdown from "components/ads/Dropdown";
 import React, { useEffect, useState } from "react";
 import { WrappedFieldInputProps } from "redux-form";
+import Dropdown from "components/ads/Dropdown";
 
 type DropdownWrapperProps = {
   placeholder: string;
@@ -13,28 +13,16 @@ type DropdownWrapperProps = {
 };
 
 const DropdownFieldWrapper = (props: DropdownWrapperProps) => {
-  const selectedValueHandler = () => {
-    if (
-      props.input &&
-      props.input.value &&
-      Object.keys(props.input.value).length > 0
-    ) {
-      return props.input.value.value;
-    } else if (props.input && typeof props.input.value === "string") {
-      return props.input.value;
-    } else if (props.placeholder) {
-      return props.placeholder;
-    }
-  };
   const [selectedOption, setSelectedOption] = useState<any>({
-    value: selectedValueHandler(),
+    value: props.input.value ? props.input.value.value : props.placeholder,
   });
+
   const onSelectHandler = (value?: string) => {
     props.input.onChange({ value: value });
   };
 
   useEffect(() => {
-    setSelectedOption({ value: selectedValueHandler() });
+    setSelectedOption({ value: props.input.value ? props.input.value.value : props.placeholder });
   }, [props.input.value, props.placeholder]);
 
   return (
