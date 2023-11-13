@@ -56,7 +56,6 @@ jobs:
             log=$(echo "${CHANGE}" | jq -r '.log')
             echo "Changed File: $path"
             echo "Component: $component"
-            echo "Improvement: $improvement"
             echo "Edits: $log"
             git config user.email "aiden.bai05@gmail.com"
             git config user.name "Aiden Bai"
