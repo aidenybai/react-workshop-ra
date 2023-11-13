@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "constants/DefaultTheme";
-import { Colors } from "constants/Colors";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Colors } from "../constants/Colors";
 import { Collapse, Icon } from "@blueprintjs/core";
 
 const CollapseWrapper = styled.div`
@@ -34,7 +34,7 @@ const CollapseComponent = (props: {
   title?: string;
   isOpen?: boolean;
 }) => {
-  const [open, toggleOpen] = React.useState(true);
+  const [open, toggleOpen] = useState(true);
   const handleIsOpen = () => {
     toggleOpen(!open);
   };
