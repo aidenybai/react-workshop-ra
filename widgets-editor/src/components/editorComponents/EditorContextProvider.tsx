@@ -1,8 +1,6 @@
-import React, { Context, createContext, ReactNode } from "react";
-import { connect } from "react-redux";
-
+import React, { createContext, ReactNode, useContext } from "react";
+import { useDispatch } from "react-redux";
 import { WidgetOperation } from "widgets/BaseWidget";
-
 import { updateWidget } from "actions/pageActions";
 import { executeAction, disableDragAction } from "actions/widgetActions";
 import {
@@ -11,11 +9,9 @@ import {
   batchUpdateWidgetProperty as batchUpdatePropertyAction,
   BatchPropertyUpdatePayload,
 } from "actions/controlActions";
-
 import { ExecuteActionPayload } from "constants/AppsmithActionConstants/ActionConstants";
 import { RenderModes } from "constants/WidgetConstants";
 import { OccupiedSpace } from "constants/editorConstants";
-
 import {
   resetChildrenMetaProperty,
   updateWidgetMetaProperty,
@@ -47,13 +43,14 @@ export type EditorContextType = {
     updates: BatchPropertyUpdatePayload,
   ) => void;
 };
-export const EditorContext: Context<EditorContextType> = createContext({});
+export const EditorContext = createContext<EditorContextType>({});
 
 type EditorContextProviderProps = EditorContextType & {
   children: ReactNode;
 };
 
 const EditorContextProvider = (props: EditorContextProviderProps) => {
+  const dispatch = useDispatch();
   const {
     executeAction,
     updateWidget,
@@ -65,17 +62,75 @@ const EditorContextProvider = (props: EditorContextProviderProps) => {
     deleteWidgetProperty,
     batchUpdateWidgetProperty,
   } = props;
+
+  const updateWidgetPropertyHandler = (
+    widgetId: string,
+    propertyName: string,
+    propertyValue: any
+  ) => {
+    dispatch(
+      updateWidgetPropertyRequest(
+        widgetId,
+        propertyName,
+        propertyValue,
+        RenderModes.CANVAS
+      )
+    );
+  };
+
+  const executeActionHandler = (actionPayload: ExecuteActionPayload) => {
+    dispatch(executeAction(actionPayload));
+  };
+
+  const updateWidgetHandler = (
+    operation: WidgetOperation,
+    widgetId: string,
+    payload: any
+  ) => {
+    dispatch(updateWidget(operation, widgetId, payload));
+  };
+
+  const updateWidgetMetaPropertyHandler = (
+    widgetId: string,
+    propertyName: string,
+    propertyValue: any
+  ) => {
+    dispatch(updateWidgetMetaProperty(widgetId, propertyName, propertyValue));
+  };
+
+  const resetChildrenMetaPropertyHandler = (widgetId: string) => {
+    dispatch(resetChildrenMetaProperty(widgetId));
+  };
+
+  const disableDragHandler = (disable: boolean) => {
+    dispatch(disableDragAction(disable));
+  };
+
+  const deleteWidgetPropertyHandler = (
+    widgetId: string,
+    propertyPaths: string[]
+  ) => {
+    dispatch(deletePropertyAction(widgetId, propertyPaths));
+  };
+
+  const batchUpdateWidgetPropertyHandler = (
+    widgetId: string,
+    updates: BatchPropertyUpdatePayload
+  ) => {
+    dispatch(batchUpdatePropertyAction(widgetId, updates));
+  };
+
   return (
     <EditorContext.Provider
       value={{
-        executeAction,
-        updateWidget,
-        updateWidgetProperty,
-        updateWidgetMetaProperty,
-        disableDrag,
-        resetChildrenMetaProperty,
-        deleteWidgetProperty,
-        batchUpdateWidgetProperty,
+        executeAction: executeActionHandler,
+        updateWidget: updateWidgetHandler,
+        updateWidgetProperty: updateWidgetPropertyHandler,
+        updateWidgetMetaProperty: updateWidgetMetaPropertyHandler,
+        disableDrag: disableDragHandler,
+        resetChildrenMetaProperty: resetChildrenMetaPropertyHandler,
+        deleteWidgetProperty: deleteWidgetPropertyHandler,
+        batchUpdateWidgetProperty: batchUpdateWidgetPropertyHandler,
       }}
     >
       {children}
@@ -83,48 +138,4 @@ const EditorContextProvider = (props: EditorContextProviderProps) => {
   );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    updateWidgetProperty: (
-      widgetId: string,
-      propertyName: string,
-      propertyValue: any,
-    ) =>
-      dispatch(
-        updateWidgetPropertyRequest(
-          widgetId,
-          propertyName,
-          propertyValue,
-          RenderModes.CANVAS,
-        ),
-      ),
-    executeAction: (actionPayload: ExecuteActionPayload) =>
-      dispatch(executeAction(actionPayload)),
-    updateWidget: (
-      operation: WidgetOperation,
-      widgetId: string,
-      payload: any,
-    ) => dispatch(updateWidget(operation, widgetId, payload)),
-    updateWidgetMetaProperty: (
-      widgetId: string,
-      propertyName: string,
-      propertyValue: any,
-    ) =>
-      dispatch(updateWidgetMetaProperty(widgetId, propertyName, propertyValue)),
-    resetChildrenMetaProperty: (widgetId: string) =>
-      dispatch(resetChildrenMetaProperty(widgetId)),
-    disableDrag: (disable: boolean) => {
-      dispatch(disableDragAction(disable));
-    },
-    deleteWidgetProperty: (widgetId: string, propertyPaths: string[]) =>
-      dispatch(deletePropertyAction(widgetId, propertyPaths)),
-    batchUpdateWidgetProperty: (
-      widgetId: string,
-      updates: BatchPropertyUpdatePayload,
-    ) => {
-      dispatch(batchUpdatePropertyAction(widgetId, updates));
-    },
-  };
-};
-
-export default connect(null, mapDispatchToProps)(EditorContextProvider);
+export default EditorContextProvider;
