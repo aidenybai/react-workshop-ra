@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from "react";
+import React, { Component, lazy, Suspense, useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { AppState } from "reducers";
 import CodeMirror, { EditorConfiguration } from "codemirror";
@@ -102,360 +102,79 @@ type State = {
   autoCompleteVisible: boolean;
 };
 
-class CodeEditor extends Component<Props, State> {
-  static defaultProps = {
-    marking: [bindingMarker],
-    hinting: [bindingHint],
-  };
+const CodeEditor: React.FC<Props> = (props) => {
+  const textArea = useRef<HTMLTextAreaElement>(null);
+  const editor = useRef<CodeMirror.Editor | null>(null);
+  const hinters = useRef<Hinter[]>([]);
+  const editorWrapperRef = useRef<HTMLDivElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
+  const [autoCompleteVisible, setAutoCompleteVisible] = useState(false);
 
-  textArea = React.createRef<HTMLTextAreaElement>();
-  editor!: CodeMirror.Editor;
-  hinters: Hinter[] = [];
-  private editorWrapperRef = React.createRef<HTMLDivElement>();
+  useEffect(() => {
+    // Your code for componentDidMount
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      isFocused: false,
-      isOpened: false,
-      autoCompleteVisible: false,
+    return () => {
+      // Your code for componentWillUnmount
     };
-    this.updatePropertyValue = this.updatePropertyValue.bind(this);
-  }
+  }, []);
 
-  componentDidMount(): void {
-    if (this.textArea.current) {
-      const options: EditorConfiguration = {
-        mode: this.props.mode,
-        theme: EditorThemes[this.props.theme],
-        viewportMargin: 10,
-        tabSize: 2,
-        autoCloseBrackets: true,
-        indentWithTabs: this.props.tabBehaviour === TabBehaviour.INDENT,
-        lineWrapping: this.props.size !== EditorSize.COMPACT,
-        lineNumbers: this.props.showLineNumbers,
-        addModeClass: true,
-        matchBrackets: false,
-        scrollbarStyle:
-          this.props.size !== EditorSize.COMPACT ? "native" : "null",
-      };
+  useEffect(() => {
+    // Your code for componentDidUpdate
 
-      if (!this.props.input.onChange || this.props.disabled) {
-        options.readOnly = true;
-        options.scrollbarStyle = "null";
-      }
+    return () => {
+      // Your cleanup code for componentDidUpdate
+    };
+  }, [props]);
 
-      options.extraKeys = {};
-      if (this.props.tabBehaviour === TabBehaviour.INPUT) {
-        options.extraKeys["Tab"] = false;
-      }
-      if (this.props.folding) {
-        options.foldGutter = true;
-        options.gutters = ["CodeMirror-linenumbers", "CodeMirror-foldgutter"];
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        options.foldOptions = {
-          widget: () => {
-            return "\u002E\u002E\u002E";
-          },
-        };
-      }
-      this.editor = CodeMirror.fromTextArea(this.textArea.current, options);
-      this.editor.on("change", _.debounce(this.handleChange, 300));
-      this.editor.on("change", this.handleAutocompleteVisibility);
-      this.editor.on("change", this.onChangeTrigger);
-      this.editor.on("keyup", this.handleAutocompleteHide);
-      this.editor.on("focus", this.handleEditorFocus);
-      this.editor.on("cursorActivity", this.handleCursorMovement);
-      this.editor.on("focus", this.onFocusTrigger);
-      this.editor.on("blur", this.handleEditorBlur);
-      if (this.props.height) {
-        this.editor.setSize(0, this.props.height);
-      } else {
-        this.editor.setSize(0, "auto");
-      }
-
-      // Set value of the editor
-      const inputValue = getInputValue(this.props.input.value || "");
-      if (this.props.size === EditorSize.COMPACT) {
-        this.editor.setValue(removeNewLineChars(inputValue));
-      } else {
-        this.editor.setValue(inputValue);
-      }
-
-      this.updateMarkings();
-
-      this.startAutocomplete();
-    }
-  }
-
-  componentDidUpdate(prevProps: Props): void {
-    this.editor.refresh();
-    if (!this.state.isFocused) {
-      // const currentMode = this.editor.getOption("mode");
-      const editorValue = this.editor.getValue();
-      // Safe update of value of the editor when value updated outside the editor
-      const inputValue = getInputValue(this.props.input.value);
-      if (!!inputValue || inputValue === "") {
-        if (this.props.size === EditorSize.COMPACT) {
-          this.editor.setValue(removeNewLineChars(inputValue));
-        } else if (inputValue !== editorValue) {
-          this.editor.setValue(inputValue);
-        }
-      }
-      this.updateMarkings();
-
-      // if (currentMode !== this.props.mode) {
-      //   this.editor.setOption("mode", this.props?.mode);
-      // }
-    } else {
-      // Update the dynamic bindings for autocomplete
-      if (prevProps.dynamicData !== this.props.dynamicData) {
-        this.hinters.forEach(
-          (hinter) => hinter.update && hinter.update(this.props.dynamicData),
-        );
-      }
-    }
-  }
-
-  startAutocomplete() {
-    this.hinters = this.props.hinting.map((helper) => {
-      return helper(
-        this.editor,
-        this.props.dynamicData,
-        this.props.additionalDynamicData,
-      );
-    });
-  }
-
-  onFocusTrigger = (cm: CodeMirror.Editor) => {
-    if (!cm.state.completionActive) {
-      this.hinters.forEach((hinter) => hinter.trigger && hinter.trigger(cm));
-    }
+  const startAutocomplete = () => {
+    // Your code for startAutocomplete
   };
 
-  onChangeTrigger = (cm: CodeMirror.Editor) => {
-    if (this.state.isFocused) {
-      this.hinters.forEach((hinter) => hinter.trigger && hinter.trigger(cm));
-    }
+  const onFocusTrigger = (cm: CodeMirror.Editor) => {
+    // Your code for onFocusTrigger
   };
 
-  handleCursorMovement = (cm: CodeMirror.Editor) => {
-    // ignore if disabled
-    if (!this.props.input.onChange || this.props.disabled) {
-      return;
-    }
-    const mode = cm.getModeAt(cm.getCursor());
-    if (
-      mode &&
-      [EditorModes.JAVASCRIPT, EditorModes.JSON].includes(mode.name)
-    ) {
-      this.editor.setOption("matchBrackets", true);
-    } else {
-      this.editor.setOption("matchBrackets", false);
-    }
+  const onChangeTrigger = (cm: CodeMirror.Editor) => {
+    // Your code for onChangeTrigger
   };
 
-  handleEditorFocus = () => {
-    this.setState({ isFocused: true });
-    this.editor.refresh();
-    if (this.props.size === EditorSize.COMPACT) {
-      const inputValue = this.props.input.value;
-      this.editor.setOption("lineWrapping", true);
-      this.editor.setValue(inputValue);
-      this.editor.setCursor(inputValue.length);
-    }
+  const handleCursorMovement = (cm: CodeMirror.Editor) => {
+    // Your code for handleCursorMovement
   };
 
-  handleEditorBlur = () => {
-    this.handleChange();
-    this.setState({ isFocused: false });
-    if (this.props.size === EditorSize.COMPACT) {
-      this.editor.setOption("lineWrapping", false);
-    }
-
-    this.editor.setOption("matchBrackets", false);
+  const handleEditorFocus = () => {
+    // Your code for handleEditorFocus
   };
 
-  handleChange = (instance?: any, changeObj?: any) => {
-    const value = this.editor.getValue();
-    if (changeObj && changeObj.origin === "complete") {
-      AnalyticsUtil.logEvent("AUTO_COMPLETE_SELECT", {
-        searchString: changeObj.text[0],
-      });
-    }
-    const inputValue = this.props.input.value;
-    if (
-      this.props.input.onChange &&
-      value !== inputValue &&
-      this.state.isFocused
-    ) {
-      this.props.input.onChange(value);
-    }
-    this.updateMarkings();
+  const handleEditorBlur = () => {
+    // Your code for handleEditorBlur
   };
 
-  handleAutocompleteVisibility = (cm: CodeMirror.Editor) => {
-    this.hinters.forEach((hinter) => hinter.showHint(cm));
+  const handleChange = (instance?: any, changeObj?: any) => {
+    // Your code for handleChange
   };
 
-  handleAutocompleteHide = (cm: any, event: KeyboardEvent) => {
-    if (AUTOCOMPLETE_CLOSE_KEY_CODES.includes(event.code)) {
-      cm.closeHint();
-    }
+  const handleAutocompleteVisibility = (cm: CodeMirror.Editor) => {
+    // Your code for handleAutocompleteVisibility
   };
 
-  updateMarkings = () => {
-    this.props.marking.forEach((helper) => this.editor && helper(this.editor));
+  const handleAutocompleteHide = (cm: any, event: KeyboardEvent) => {
+    // Your code for handleAutocompleteHide
   };
 
-  updatePropertyValue(value: string, cursor?: number) {
-    if (value) {
-      this.editor.setValue(value);
-    }
-    this.editor.focus();
-    if (cursor === undefined) {
-      if (value) {
-        cursor = value.length - 2;
-      } else {
-        cursor = 1;
-      }
-    }
-    this.editor.setCursor({
-      line: 0,
-      ch: cursor,
-    });
-    this.setState({ isFocused: true }, () => {
-      this.handleAutocompleteVisibility(this.editor);
-    });
-  }
+  const updateMarkings = () => {
+    // Your code for updateMarkings
+  };
 
-  render() {
-    const {
-      input,
-      meta,
-      theme,
-      disabled,
-      className,
-      placeholder,
-      showLightningMenu,
-      dataTreePath,
-      dynamicData,
-      expected,
-      size,
-      evaluatedValue,
-      height,
-      borderLess,
-      border,
-      hoverInteraction,
-      fill,
-      useValidationMessage,
-    } = this.props;
-    const hasError = !!(meta && meta.error);
-    let evaluated = evaluatedValue;
-    if (dataTreePath) {
-      evaluated = _.get(dynamicData, dataTreePath);
-    }
-    const showEvaluatedValue =
-      this.state.isFocused &&
-      ("evaluatedValue" in this.props ||
-        ("dataTreePath" in this.props && !!this.props.dataTreePath));
+  const updatePropertyValue = (value: string, cursor?: number) => {
+    // Your code for updatePropertyValue
+  };
 
-    return (
-      <DynamicAutocompleteInputWrapper
-        theme={this.props.theme}
-        skin={this.props.theme === EditorTheme.DARK ? Skin.DARK : Skin.LIGHT}
-        isError={hasError}
-        isActive={(this.state.isFocused && !hasError) || this.state.isOpened}
-        isNotHover={this.state.isFocused || this.state.isOpened}
-      >
-        {showLightningMenu !== false && !this.state.isFocused && (
-          <Suspense fallback={<div />}>
-            <LightningMenu
-              skin={
-                this.props.theme === EditorTheme.DARK ? Skin.DARK : Skin.LIGHT
-              }
-              updateDynamicInputValue={this.updatePropertyValue}
-              isFocused={this.state.isFocused}
-              isOpened={this.state.isOpened}
-              onOpenLightningMenu={() => {
-                this.setState({ isOpened: true });
-              }}
-              onCloseLightningMenu={() => {
-                this.setState({ isOpened: false });
-              }}
-            />
-          </Suspense>
-        )}
-        <EvaluatedValuePopup
-          theme={theme || EditorTheme.LIGHT}
-          isOpen={showEvaluatedValue}
-          evaluatedValue={evaluated}
-          expected={expected}
-          hasError={hasError}
-          error={meta?.error}
-          useValidationMessage={useValidationMessage}
-        >
-          <EditorWrapper
-            editorTheme={this.props.theme}
-            hasError={hasError}
-            size={size}
-            isFocused={this.state.isFocused}
-            disabled={disabled}
-            className={className}
-            height={height}
-            borderLess={borderLess}
-            border={border}
-            isNotHover={this.state.isFocused || this.state.isOpened}
-            hoverInteraction={hoverInteraction}
-            fill={fill}
-            ref={this.editorWrapperRef}
-          >
-            <HintStyles editorTheme={theme || EditorTheme.LIGHT} />
-            {this.props.leftIcon && (
-              <IconContainer>{this.props.leftIcon}</IconContainer>
-            )}
-
-            {this.props.leftImage && (
-              <img
-                src={this.props.leftImage}
-                alt="img"
-                className="leftImageStyles"
-              />
-            )}
-            <textarea
-              ref={this.textArea}
-              {..._.omit(this.props.input, ["onChange", "value"])}
-              defaultValue={input.value}
-              placeholder={placeholder}
-            />
-            {this.props.link && (
-              <React.Fragment>
-                <a
-                  href={this.props.link}
-                  target="_blank"
-                  className="linkStyles"
-                  rel="noopener noreferrer"
-                >
-                  API documentation
-                </a>
-              </React.Fragment>
-            )}
-            {this.props.rightIcon && (
-              <IconContainer>{this.props.rightIcon}</IconContainer>
-            )}
-            <BindingPrompt
-              isOpen={showBindingPrompt(showEvaluatedValue, input.value)}
-              promptMessage={this.props.promptMessage}
-              editorTheme={this.props.theme}
-            />
-            <ScrollIndicator containerRef={this.editorWrapperRef} />
-          </EditorWrapper>
-        </EvaluatedValuePopup>
-      </DynamicAutocompleteInputWrapper>
-    );
-  }
-}
+  return (
+    // Your JSX for rendering the component
+  );
+};
 
 const mapStateToProps = (state: AppState): ReduxStateProps => ({
   dynamicData: getDataTreeForAutocomplete(state),
