@@ -4,10 +4,10 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 
 export interface CommonComponentProps {
-  isLoading?: boolean; //default false
+  isLoading?: boolean;
   cypressSelector?: string;
   className?: string;
-  disabled?: boolean; //default false
+  disabled?: boolean;
 }
 
 export type ThemeProp = {
@@ -25,13 +25,7 @@ export enum Classes {
   DATE_PICKER_OVARLAY = "date-picker-overlay",
 }
 
-export const hexToRgb = (
-  hex: string,
-): {
-  r: number;
-  g: number;
-  b: number;
-} => {
+export const hexToRgb = (hex: string) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
@@ -62,6 +56,7 @@ export const darken = (color: string, amount: number) => {
     .darken(amount)
     .toString();
 };
+
 export const StoryWrapper = styled.div`
   background: #ffffff;
   height: 700px;
