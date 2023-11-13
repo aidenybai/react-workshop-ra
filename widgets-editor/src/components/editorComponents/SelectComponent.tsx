@@ -15,26 +15,30 @@ type SelectComponentProps = {
 };
 
 export const SelectComponent = (props: SelectComponentProps) => {
+  const getDropdownOptions = () => {
+    if (props.options) {
+      return props.options.map((option) => ({
+        content: option.content ? option.content : option.name,
+        onSelect: () => {
+          props.input.onChange && props.input.onChange(option.id);
+        },
+        shouldCloseDropdown: true,
+      }));
+    }
+    return [];
+  };
+
   const dropdownProps: CustomizedDropdownProps = {
     sections: [
       {
         isSticky: false,
-        options:
-          props.options &&
-          props.options.map((option) => ({
-            content: option.content ? option.content : option.name,
-            onSelect: () => {
-              props.input.onChange && props.input.onChange(option.id);
-            },
-            shouldCloseDropdown: true,
-          })),
+        options: getDropdownOptions(),
       },
     ],
     trigger: {
       text: props.input.value
         ? props.options &&
-          props.options.filter((option) => props.input.value === option.id)[0]
-            .name
+          props.options.find((option) => props.input.value === option.id)?.name
         : props.placeholder,
       outline: props?.outline ?? true,
       size: props.size,
