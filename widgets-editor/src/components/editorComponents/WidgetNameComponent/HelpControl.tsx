@@ -40,14 +40,15 @@ const StyledHelpIcon = styled.div`
 
 export const HelpControl = (props: { type: WidgetType; show: boolean }) => {
   const dispatch = useDispatch();
+  const handleHelpClick = () => {
+    dispatch(setHelpDefaultRefinement(HelpMap[props.type].searchKey));
+    dispatch(setHelpModalVisibility(true));
+  };
+
   return props.show ? (
     <StyledHelpIcon
       className="control t--widget-help-control"
-      onClick={() => {
-        dispatch(setHelpDefaultRefinement(HelpMap[props.type].searchKey));
-        dispatch(setHelpModalVisibility(true));
-        // window.open(`${HelpBaseURL}${HelpMap[props.type]}`, "_blank");
-      }}
+      onClick={handleHelpClick}
     >
       <Tooltip content="Open Help" hoverOpenDelay={500} position="top">
         {helpControlIcon}
