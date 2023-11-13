@@ -1,17 +1,16 @@
 import React from "react";
 import BaseControl, { ControlProps } from "./BaseControl";
-import { IconName, ButtonGroup, Button, Classes } from "@blueprintjs/core";
+import { ButtonGroup, Button, Classes } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-const iconNames: string[] = Object.values({ ...IconNames });
 
 class MultiSwitchControl extends BaseControl<MultiSwitchControlProps> {
   renderOption = (option: SwitchOption) => {
     const isIcon: boolean =
-      !!option.icon && iconNames.indexOf(option.icon) > -1;
+      !!option.icon && IconNames[option.icon as keyof typeof IconNames];
     return (
       <Button
         key={option.label || option.icon}
-        icon={isIcon ? (option.icon as IconName) : undefined}
+        icon={isIcon ? option.icon as keyof typeof IconNames : undefined}
         text={!isIcon && option.label}
         active={this.props.propertyValue === option.value}
         onClick={() =>
