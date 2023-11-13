@@ -1,20 +1,16 @@
-import React, { useEffect, useCallback, JSXElementConstructor } from "react";
+import React, { useEffect, useCallback } from "react";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 import styled from "styled-components";
 import { Icon } from "@blueprintjs/core";
-import { FormIcons } from "icons/FormIcons";
 import BaseControl, { ControlProps } from "./BaseControl";
 import TextField from "components/editorComponents/form/fields/TextField";
 import { ControlType } from "constants/PropertyControlConstants";
-import DynamicTextField from "components/editorComponents/form/fields/DynamicTextField";
 import FormLabel from "components/editorComponents/FormLabel";
 import { InputType } from "widgets/InputWidget";
-import HelperTooltip from "components/editorComponents/HelperTooltip";
 import { Colors } from "constants/Colors";
 
 const FormRowWithLabel = styled.div`
   display: flex;
-  flex: 1;
   flex-direction: row;
   & svg {
     cursor: pointer;
@@ -79,21 +75,6 @@ const KeyValueRow = (props: KeyValueArrayProps & WrappedFieldArrayProps) => {
       {typeof props.fields.getAll() === "object" && (
         <React.Fragment>
           {props.fields.map((field: any, index: number) => {
-            const otherProps: Record<string, any> = {};
-            if (
-              props.actionConfig &&
-              props.actionConfig[index].description &&
-              props.rightIcon
-            ) {
-              otherProps.rightIcon = (
-                <HelperTooltip
-                  description={props.actionConfig[index].description}
-                  rightIcon={
-                    props.actionConfig[index].description && props.rightIcon
-                  }
-                />
-              );
-            }
             return (
               <FormRowWithLabel key={index} style={{ marginTop: 16 }}>
                 <div style={{ width: "50vh" }}>
@@ -109,56 +90,39 @@ const KeyValueRow = (props: KeyValueArrayProps & WrappedFieldArrayProps) => {
                     }
                   />
                 </div>
-                {!props.actionConfig && (
-                  <div style={{ marginLeft: 16 }}>
-                    <FormLabel>
-                      {extraData && extraData[1].label} {isRequired && "*"}
-                    </FormLabel>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: 14, width: 72 }}>
-                        <StyledTextField
-                          name={`${field}.${valueName[1]}`}
-                          type={valueDataType}
-                          placeholder={
-                            (extraData && extraData[1].placeholderText) || ""
-                          }
-                        />
-                      </div>
-                      {index === props.fields.length - 1 ? (
-                        <Icon
-                          icon="plus"
-                          iconSize={20}
-                          onClick={() =>
-                            props.fields.push({ key: "", value: "" })
-                          }
-                          color={Colors["CADET_BLUE"]}
-                          style={{ alignSelf: "center" }}
-                        />
-                      ) : (
-                        <FormIcons.DELETE_ICON
-                          height={20}
-                          width={20}
-                          color={Colors["CADET_BLUE"]}
-                          onClick={() => props.fields.remove(index)}
-                          style={{ alignSelf: "center" }}
-                        />
-                      )}
+                <div style={{ marginLeft: 16 }}>
+                  <FormLabel>
+                    {extraData && extraData[1].label} {isRequired && "*"}
+                  </FormLabel>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div style={{ marginRight: 14, width: 72 }}>
+                      <StyledTextField
+                        name={`${field}.${valueName[1]}`}
+                        type={valueDataType}
+                        placeholder={
+                          (extraData && extraData[1].placeholderText) || ""
+                        }
+                      />
                     </div>
+                    {index === props.fields.length - 1 ? (
+                      <Icon
+                        icon="plus"
+                        iconSize={20}
+                        onClick={() => props.fields.push({ key: "", value: "" })}
+                        color={Colors["CADET_BLUE"]}
+                        style={{ alignSelf: "center" }}
+                      />
+                    ) : (
+                      <Icon
+                        icon="minus"
+                        iconSize={20}
+                        onClick={() => props.fields.remove(index)}
+                        color={Colors["CADET_BLUE"]}
+                        style={{ alignSelf: "center" }}
+                      />
+                    )}
                   </div>
-                )}
-
-                {props.actionConfig && (
-                  <DynamicTextField
-                    name={`${field}.value`}
-                    placeholder={
-                      props.actionConfig[index].mandatory &&
-                      props.actionConfig[index].type
-                        ? `Value (Type: ${props.actionConfig[index].type})`
-                        : `Value (optional)`
-                    }
-                    {...otherProps}
-                  />
-                )}
+                </div>
               </FormRowWithLabel>
             );
           })}
