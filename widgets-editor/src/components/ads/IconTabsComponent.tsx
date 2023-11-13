@@ -2,7 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { ControlIcons, ControlIconName } from "icons/ControlIcons";
 
-const ItemWrapper = styled.div<{ selected: boolean }>`
+interface ItemWrapperProps {
+  selected: boolean;
+}
+
+const ItemWrapper = styled.div<ItemWrapperProps>`
   width: 32px;
   height: 32px;
   display: flex;
