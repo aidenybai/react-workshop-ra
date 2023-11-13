@@ -13,7 +13,12 @@ interface TableActionIconProps {
   icon?: React.ReactNode;
 }
 
-const TableActionIcon = (props: TableActionIconProps) => {
+const TableActionIcon: React.FC<TableActionIconProps> = (props) => {
+  const handleSelectMenu = (e: React.MouseEvent) => {
+    props.selectMenu(!props.selected);
+    e.stopPropagation();
+  };
+
   return (
     <Tooltip
       autoFocus={false}
@@ -27,10 +32,7 @@ const TableActionIcon = (props: TableActionIconProps) => {
     >
       <TableIconWrapper
         selected={props.selected}
-        onClick={(e) => {
-          props.selectMenu(!props.selected);
-          e.stopPropagation();
-        }}
+        onClick={handleSelectMenu}
         className={props.className}
       >
         <IconWrapper
@@ -40,7 +42,7 @@ const TableActionIcon = (props: TableActionIconProps) => {
         >
           {props.children}
         </IconWrapper>
-        {props.icon ? props.icon : null}
+        {props.icon && props.icon}
       </TableIconWrapper>
     </Tooltip>
   );
