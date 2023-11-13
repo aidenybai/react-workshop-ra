@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, RefObject, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useDragLayer, XYCoord } from "react-dnd";
 import DropZone from "./Dropzone";
@@ -12,12 +12,9 @@ import { getNearestParentCanvas } from "utils/generators";
 const WrappedDragLayer = styled.div<{
   columnWidth: number;
   rowHeight: number;
-  ref: RefObject<HTMLDivElement>;
 }>`
   position: absolute;
   pointer-events: none;
-  left: 0;
-  top: 0;
   left: ${CONTAINER_GRID_PADDING}px;
   top: ${CONTAINER_GRID_PADDING}px;
   height: calc(100% - ${CONTAINER_GRID_PADDING}px);
@@ -51,13 +48,12 @@ type DragLayerProps = {
 
 const DragLayerComponent = (props: DragLayerProps) => {
   const { updateDropTargetRows } = useContext(DropTargetContext);
-  const dropTargetMask: RefObject<HTMLDivElement> = React.useRef(null);
-  const dropZoneRef = React.useRef<HTMLDivElement>(null);
+  const dropTargetMask = useRef<HTMLDivElement>(null);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const el = dropZoneRef.current;
-    const scrollParent: Element | null = getNearestParentCanvas(
-      dropTargetMask.current,
-    );
+    const scrollParent = getNearestParentCanvas(dropTargetMask.current);
     if (dropTargetMask.current) {
       if (el && props.canDropTargetExtend) {
         scrollElementIntoParentCanvasView(el, scrollParent);
@@ -65,10 +61,7 @@ const DragLayerComponent = (props: DragLayerProps) => {
     }
   });
 
-  const dropTargetOffset = useRef({
-    x: 0,
-    y: 0,
-  });
+  const dropTargetOffset = useRef<XYCoord>({ x: 0, y: 0 });
   const { isDragging, currentOffset, widget, canDrop } = useDragLayer(
     (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -133,19 +126,12 @@ const DragLayerComponent = (props: DragLayerProps) => {
     return null;
   }
 
-  /*
-  When the parent offsets are not updated, we don't need to show the dropzone, as the dropzone
-  will be rendered at an incorrect coordinates.
-  We can be sure that the parent offset has been calculated
-  when the coordiantes are not [0,0].
-  */
   const isParentOffsetCalculated = dropTargetOffset.current.x !== 0;
 
   return (
     <WrappedDragLayer
       columnWidth={props.parentColumnWidth}
       rowHeight={props.parentRowHeight}
-      ref={dropTargetMask}
     >
       {props.visible &&
         props.isOver &&
