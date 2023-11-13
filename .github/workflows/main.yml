@@ -66,7 +66,7 @@ jobs:
             git commit -m "auto-optimize: $path"
             git push -u origin "$BRANCH_NAME"
             gh pr create \
-              --title "🦁 perf($path): improve $component component rendering by $improvement%" \
+              --title "🦁 perf($path): improve $component component" \
               --body "$log" \
               --base main \
               --head "$BRANCH_NAME" \
