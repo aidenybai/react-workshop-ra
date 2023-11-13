@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-// TODO(abhinav): This file may not be used anymore.
 import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
@@ -74,43 +72,38 @@ const ItemContainer = styled.div`
   }
 `;
 
-class NavBarItem extends React.Component<Props> {
-  render(): React.ReactNode {
-    const {
-      title,
-      icon,
-      path,
-      exact,
-      width,
-      height,
-      onClick,
-      isActive,
-    } = this.props;
-
-    return (
-      <ItemContainer>
-        <NavLink
-          exact={exact}
-          to={path}
-          isActive={(match, location) => {
-            return isActive(path, location.pathname);
-          }}
-          className={this.props.className}
-          onClick={() => {
-            onClick && onClick();
-            AnalyticsUtil.logEvent("SIDEBAR_NAVIGATION", {
-              navPage: this.props.title.toUpperCase(),
-            });
-          }}
-        >
-          <IconContainer width={width} height={height}>
-            {icon({ width, height })}
-          </IconContainer>
-          <span>{title}</span>
-        </NavLink>
-      </ItemContainer>
-    );
-  }
-}
+const NavBarItem: React.FC<Props> = ({
+  title,
+  icon,
+  path,
+  exact,
+  width,
+  height,
+  onClick,
+  isActive,
+}) => {
+  return (
+    <ItemContainer>
+      <NavLink
+        exact={exact}
+        to={path}
+        isActive={(match, location) => {
+          return isActive(path, location.pathname);
+        }}
+        onClick={() => {
+          onClick && onClick();
+          AnalyticsUtil.logEvent("SIDEBAR_NAVIGATION", {
+            navPage: title.toUpperCase(),
+          });
+        }}
+      >
+        <IconContainer width={width} height={height}>
+          {icon({ width, height })}
+        </IconContainer>
+        <span>{title}</span>
+      </NavLink>
+    </ItemContainer>
+  );
+};
 
 export default NavBarItem;
