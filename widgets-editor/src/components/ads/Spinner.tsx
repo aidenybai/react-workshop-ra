@@ -1,7 +1,5 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import { sizeHandler, IconSize } from "./Icon";
-import { Classes } from "./common";
 
 const rotate = keyframes`
   100% {
@@ -24,10 +22,10 @@ const dash = keyframes`
   }
 `;
 
-const SvgContainer = styled.svg<SpinnerProp>`
+const SvgContainer = styled.svg`
   animation: ${rotate} 2s linear infinite;
-  width: ${(props) => sizeHandler(props.size)}px;
-  height: ${(props) => sizeHandler(props.size)}px;
+  width: ${(props) => props.size}px;
+  height: ${(props) => props.size}px;
 `;
 
 const SvgCircle = styled.circle`
@@ -37,19 +35,18 @@ const SvgCircle = styled.circle`
   stroke-width: ${(props) => props.theme.spaces[1]}px;
 `;
 
-export type SpinnerProp = {
-  size?: IconSize;
+export type SpinnerProps = {
+  size?: number;
 };
 
 Spinner.defaultProp = {
-  size: "small",
+  size: 20,
 };
 
-export default function Spinner(props: SpinnerProp) {
+export default function Spinner(props: SpinnerProps) {
   return (
     <SvgContainer
       viewBox="0 0 50 50"
-      className={Classes.SPINNER}
       size={props.size}
     >
       <SvgCircle cx="25" cy="25" r="20" fill="none"></SvgCircle>
