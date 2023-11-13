@@ -1,9 +1,8 @@
 import React from "react";
-import Select, { InputActionMeta } from "react-select";
+import Select, { InputActionMeta, components } from "react-select";
 import { WrappedFieldInputProps, WrappedFieldMetaProps } from "redux-form";
 
 import { theme } from "constants/DefaultTheme";
-import { SelectComponents } from "react-select/src/components";
 
 type DropdownProps = {
   options: Array<{
@@ -14,7 +13,7 @@ type DropdownProps = {
   isLoading?: boolean;
   input: WrappedFieldInputProps;
   meta: WrappedFieldMetaProps;
-  components: SelectComponents<any>;
+  components: components;
   onCreateOption: (inputValue: string) => void;
   formatCreateLabel?: (value: string) => React.ReactNode;
   noOptionsMessage?: (obj: { inputValue: string }) => string;
