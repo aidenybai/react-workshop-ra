@@ -6,7 +6,7 @@ import Text, { TextType } from "components/ads/Text";
 import Icon, { IconSize } from "components/ads/Icon";
 import { Classes } from "components/ads/common";
 
-export const DatasourceIcon = styled.div<{ enable?: boolean }>`
+const DatasourceIcon = styled.div<{ enable?: boolean }>`
   position: absolute;
   right: -155px;
   top: 7px;
@@ -31,18 +31,24 @@ const disabled = css`
   opacity: 0.7;
 `;
 
-type storeDataSourceProps = {
+type StoreDataSourceProps = {
   enable: boolean;
 };
 
-const StoreAsDatasource = (props: storeDataSourceProps) => {
+const StoreAsDatasource = (props: StoreDataSourceProps) => {
   const dispatch = useDispatch();
+
+  const handleStoreAsDatasource = () => {
+    if (props.enable) {
+      dispatch(storeAsDatasource());
+    }
+  };
 
   return (
     <DatasourceIcon
       className="t--store-as-datasource"
       enable={props.enable}
-      onClick={() => dispatch(storeAsDatasource())}
+      onClick={handleStoreAsDatasource}
     >
       <Icon name="datasource" size={IconSize.LARGE} />
       <Text type={TextType.P1}>Save As Datasource</Text>
