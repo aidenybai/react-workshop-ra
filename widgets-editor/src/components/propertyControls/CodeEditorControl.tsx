@@ -19,10 +19,11 @@ class CodeEditorControl extends BaseControl<ControlProps> {
       evaluatedValue,
       useValidationMessage,
     } = this.props;
-    const props: Partial<ControlProps> = {};
-    if (dataTreePath) props.dataTreePath = dataTreePath;
-    if (evaluatedValue) props.evaluatedValue = evaluatedValue;
-    if (expected) props.expected = expected;
+    const props: Partial<ControlProps> = {
+      dataTreePath,
+      evaluatedValue,
+      expected,
+    };
 
     return (
       <CodeEditor
