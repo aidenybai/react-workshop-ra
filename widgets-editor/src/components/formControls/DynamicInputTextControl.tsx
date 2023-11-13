@@ -8,13 +8,15 @@ import { formValueSelector } from "redux-form";
 import { QUERY_EDITOR_FORM_NAME } from "constants/forms";
 import { connect } from "react-redux";
 
-export function InputText(props: {
+interface InputTextProps {
   label: string;
   placeholder?: string;
   isRequired?: boolean;
   name: string;
   actionName: string;
-}) {
+}
+
+const InputText: React.FC<InputTextProps> = (props) => {
   const { actionName, name, placeholder, label, isRequired } = props;
   const dataTreePath = actionPathFromName(actionName, name);
 
@@ -31,7 +33,7 @@ export function InputText(props: {
       />
     </div>
   );
-}
+};
 
 class DynamicInputTextControl extends BaseControl<DynamicInputControlProps> {
   render() {
@@ -52,7 +54,7 @@ class DynamicInputTextControl extends BaseControl<DynamicInputControlProps> {
   }
 }
 
-export interface DynamicInputControlProps extends ControlProps {
+interface DynamicInputControlProps extends ControlProps {
   placeholderText: string;
   actionName: string;
 }
