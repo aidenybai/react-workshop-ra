@@ -22,7 +22,6 @@ const DraggableWrapper = styled.div`
   cursor: grab;
 `;
 
-// Widget Boundaries which is shown to indicate the boundaries of the widget
 const WidgetBoundaries = styled.div`
   transform: translate3d(-${WIDGET_PADDING + 1}px, -${WIDGET_PADDING + 1}px, 0);
   z-index: 0;
@@ -36,47 +35,15 @@ const WidgetBoundaries = styled.div`
 
 type DraggableComponentProps = WidgetProps;
 
-/* eslint-disable react/display-name */
-
 const DraggableComponent = (props: DraggableComponentProps) => {
-  // Dispatch hook handy to toggle property pane
   const showPropertyPane = useShowPropertyPane();
-
-  // Dispatch hook handy to set a widget as focused/selected
   const { selectWidget, focusWidget } = useWidgetSelection();
-
-  // Dispatch hook handy to set any `DraggableComponent` as dragging/ not dragging
-  // The value is boolean
   const { setIsDragging } = useWidgetDragResize();
-
-  // This state tells us which widget is selected
-  // The value is the widgetId of the selected widget
-  const selectedWidget = useSelector(
-    (state: AppState) => state.ui.widgetDragResize.selectedWidget,
-  );
-
-  // This state tels us which widget is focused
-  // The value is the widgetId of the focused widget.
-  const focusedWidget = useSelector(
-    (state: AppState) => state.ui.widgetDragResize.focusedWidget,
-  );
-
-  // This state tells us whether a `ResizableComponent` is resizing
-  const isResizing = useSelector(
-    (state: AppState) => state.ui.widgetDragResize.isResizing,
-  );
-
-  // This state tells us whether a `DraggableComponent` is dragging
-  const isDragging = useSelector(
-    (state: AppState) => state.ui.widgetDragResize.isDragging,
-  );
-
-  // This state tells us to disable dragging,
-  // This is usually true when widgets themselves implement drag/drop
-  // This flag resolves conflicting drag/drop triggers.
-  const isDraggingDisabled: boolean = useSelector(
-    (state: AppState) => state.ui.widgetDragResize.isDraggingDisabled,
-  );
+  const selectedWidget = useSelector((state: AppState) => state.ui.widgetDragResize.selectedWidget);
+  const focusedWidget = useSelector((state: AppState) => state.ui.widgetDragResize.focusedWidget);
+  const isResizing = useSelector((state: AppState) => state.ui.widgetDragResize.isResizing);
+  const isDragging = useSelector((state: AppState) => state.ui.widgetDragResize.isDragging);
+  const isDraggingDisabled: boolean = useSelector((state: AppState) => state.ui.widgetDragResize.isDraggingDisabled);
 
   const [{ isCurrentWidgetDragging }, drag] = useDrag({
     ...props,
@@ -84,34 +51,19 @@ const DraggableComponent = (props: DraggableComponentProps) => {
       isCurrentWidgetDragging: monitor.isDragging(),
     }),
     item: () => {
-      // When this draggable starts dragging
-
-      // Make sure that this widget is selected
-      selectWidget &&
-        selectedWidget !== props.widgetId &&
-        selectWidget(props.widgetId);
-
-      // Tell the rest of the application that a widget has started dragging
+      selectWidget && selectedWidget !== props.widgetId && selectWidget(props.widgetId);
       setIsDragging && setIsDragging(true);
-
       AnalyticsUtil.logEvent("WIDGET_DRAG", {
         widgetName: props.widgetName,
         widgetType: props.type,
       });
-
       return props;
     },
     end: (widget, monitor) => {
-      // When this draggable is dropped, we try to open the propertypane
-      // We pass the second parameter to make sure the previous toggle state (open/close)
-      // of the property pane is taken into account.
-      // See utils/hooks/dragResizeHooks.tsx
       const didDrop = monitor.didDrop();
       if (didDrop) {
         showPropertyPane && showPropertyPane(props.widgetId, undefined, true);
       }
-      // Take this to the bottom of the stack. So that it runs last.
-      // We do this because, we don't want erroraneous mouse clicks to propagate.
       setTimeout(() => setIsDragging && setIsDragging(false), 0);
       AnalyticsUtil.logEvent("WIDGET_DROP", {
         widgetName: props.widgetName,
@@ -120,58 +72,39 @@ const DraggableComponent = (props: DraggableComponentProps) => {
       });
     },
     canDrag: () => {
-      // Dont' allow drag if we're resizing or the drag of `DraggableComponent` is disabled
       return !isResizing && !isDraggingDisabled;
     },
   });
 
-  // True when any widget is dragging or resizing, including this one
   const isResizingOrDragging = !!isResizing || !!isDragging;
 
-  // When the draggable is clicked
   const handleClick = (e: any) => {
     if (!isResizingOrDragging) {
-      selectWidget &&
-        selectedWidget !== props.widgetId &&
-        selectWidget(props.widgetId);
+      selectWidget && selectedWidget !== props.widgetId && selectWidget(props.widgetId);
     }
     e.stopPropagation();
   };
 
-  // When mouse is over this draggable
   const handleMouseOver = (e: any) => {
-    focusWidget &&
-      !isResizingOrDragging &&
-      focusedWidget !== props.widgetId &&
-      focusWidget(props.widgetId);
+    focusWidget && !isResizingOrDragging && focusedWidget !== props.widgetId && focusWidget(props.widgetId);
     e.stopPropagation();
   };
 
-  // Display this draggable based on the current drag state
   const style: CSSProperties = {
     display: isCurrentWidgetDragging ? "none" : "flex",
   };
 
-  // WidgetBoundaries
   const widgetBoundaries = (
     <WidgetBoundaries
       style={{
-        opacity:
-          isResizingOrDragging && selectedWidget !== props.widgetId ? 1 : 0,
+        opacity: isResizingOrDragging && selectedWidget !== props.widgetId ? 1 : 0,
       }}
     />
   );
 
-  const classNameForTesting = `t--draggable-${props.type
-    .split("_")
-    .join("")
-    .toLowerCase()}`;
-
+  const classNameForTesting = `t--draggable-${props.type.split("_").join("").toLowerCase()}`;
   const className = `${classNameForTesting}`;
-
-  const shouldRenderComponent = !(
-    selectedWidget === props.widgetId && isDragging
-  );
+  const shouldRenderComponent = !(selectedWidget === props.widgetId && isDragging);
 
   return (
     <DraggableWrapper
