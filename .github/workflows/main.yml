@@ -53,6 +53,36 @@ jobs:
             git config user.name "Aiden Bai"
             BRANCH_NAME="auto-optimization-${path//[^a-zA-Z0-9]/-}-${{ github.run_number }}"
             git checkout -b "$BRANCH_NAME"
+            (git add "$path" || (echo "Retrying add..." && git add "$path"))
+            (git commit -m "auto-optimize: $path || (echo "Retrying commit..." && git commit -m "auto-optimize: $path"))
+            git push -u origin "$BRANCH_NAME" || echo "Failed to push $BRANCH_NAME, continuing..."
+            gh pr create \
+              --title "🦁 perf($path): improve $component component" \
+              --body "$log" \
+              --base main \
+              --head "$BRANCH_NAME" \
+              --label "auto perf" || echo "Failed to create PR for $path, continuing..."
+            git checkout main
+          done
+
+      - name: Check python outputs and generate PRs
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          cd ${{ github.workspace }}
+          jq -c '.changes' output.jsonl > changes.jsonl
+          jq -c '.[]' changes.jsonl | while IFS= read -r CHANGE; do
+            path=$(echo "${CHANGE}" | jq -r '.path')
+            component=$(echo "${CHANGE}" | jq -r '.component')
+            improvement=$(echo "${CHANGE}" | jq -r '.improvement')
+            log=$(echo "${CHANGE}" | jq -r '.log')
+            echo "Changed File: $path"
+            echo "Component: $component"
+            echo "Edits: $log"
+            git config user.email "aiden.bai05@gmail.com"
+            git config user.name "Aiden Bai"
+            BRANCH_NAME="auto-optimization-${path//[^a-zA-Z0-9]/-}-${{ github.run_number }}"
+            git checkout -b "$BRANCH_NAME"
             git add "$path"
             git commit -m "auto-optimize: $path"
             git push -u origin "$BRANCH_NAME"
