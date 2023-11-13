@@ -1,11 +1,17 @@
 import React from "react";
 
-const Highlight = ({ match, text }: { match: string; text: string }) => {
+interface HighlightProps {
+  match: string;
+  text: string;
+}
+
+const Highlight: React.FC<HighlightProps> = ({ match, text }) => {
   if (!match) return <span>{text}</span>;
 
   const regEx = new RegExp(match, "ig");
   const parts = text?.split(regEx);
   if (parts?.length === 1) return <span>{text}</span>;
+
   let lastIndex = 0;
 
   return (
