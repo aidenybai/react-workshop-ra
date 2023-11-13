@@ -1,6 +1,5 @@
 import React from "react";
 import BaseControl, { ControlProps } from "./BaseControl";
-// import DynamicActionCreator from "components/editorComponents/DynamicActionCreator";
 import { ActionCreator } from "components/editorComponents/ActionCreator";
 
 class ActionSelectorControl extends BaseControl<ControlProps> {
@@ -10,15 +9,15 @@ class ActionSelectorControl extends BaseControl<ControlProps> {
   };
 
   render() {
-    const { propertyValue } = this.props;
+    const { propertyValue, isValid, errorMessage, additionalAutoComplete } = this.props;
 
     return (
       <ActionCreator
         value={propertyValue}
-        isValid={this.props.isValid}
-        validationMessage={this.props.errorMessage}
+        isValid={isValid}
+        validationMessage={errorMessage}
         onValueChange={this.handleValueUpdate}
-        additionalAutoComplete={this.props.additionalAutoComplete}
+        additionalAutoComplete={additionalAutoComplete}
       />
     );
   }
