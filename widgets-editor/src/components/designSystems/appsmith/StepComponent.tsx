@@ -3,40 +3,6 @@ import { ControlIcons } from "icons/ControlIcons";
 import { AnyStyledComponent } from "styled-components";
 import styled from "constants/DefaultTheme";
 
-const StyledIncreaseIcon = styled(
-  ControlIcons.INCREASE_CONTROL as AnyStyledComponent,
-)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  cursor: pointer;
-  width: 40px;
-  height: 32px;
-  svg {
-    path {
-      fill: ${(props) => props.theme.colors.paneSectionLabel};
-    }
-  }
-`;
-
-const StyledDecreaseIcon = styled(
-  ControlIcons.DECREASE_CONTROL as AnyStyledComponent,
-)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  cursor: pointer;
-  width: 40px;
-  height: 32px;
-  svg {
-    path {
-      fill: ${(props) => props.theme.colors.paneSectionLabel};
-    }
-  }
-`;
-
 const StepWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -85,9 +51,9 @@ export const StepComponent = (props: StepComponentProps) => {
   }
   return (
     <StepWrapper>
-      <StyledDecreaseIcon height={2} width={12} onClick={decrease} />
+      <ControlIcons.DECREASE_CONTROL height={2} width={12} onClick={decrease} />
       <InputWrapper>{props.displayFormat(props.value)}</InputWrapper>
-      <StyledIncreaseIcon height={12} width={12} onClick={increase} />
+      <ControlIcons.INCREASE_CONTROL height={12} width={12} onClick={increase} />
     </StepWrapper>
   );
 };
