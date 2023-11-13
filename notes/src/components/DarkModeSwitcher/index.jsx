@@ -1,11 +1,10 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
-import Brightness2Icon from "@mui/icons-material/Brightness2";
+import { WbSunnyIcon, Brightness2Icon } from "@mui/icons-material";
 import { useContext } from "react";
 import { DarkModeContext } from "../DarkModeContext";
 import "./index.css";
 
-function DarkModeSwitcher() {
+const DarkModeSwitcher = () => {
   const { mode, setMode } = useContext(DarkModeContext);
 
   return (
@@ -15,7 +14,7 @@ function DarkModeSwitcher() {
         value={mode}
         exclusive
         onChange={(_e, value) => setMode(value)}
-        aria-label="text alignment"
+        aria-label="theme switcher"
       >
         <ToggleButton value="light">
           <WbSunnyIcon />
