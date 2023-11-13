@@ -1,5 +1,4 @@
-import { isEqual } from "lodash";
-import React from "react";
+import React, { PureComponent } from "react";
 import DraggableList from "./DraggableList";
 
 type RenderComponentProps = {
@@ -25,19 +24,7 @@ interface DroppableComponentProps {
   onEdit?: (index: number) => void;
 }
 
-export class DroppableComponent extends React.Component<
-  DroppableComponentProps
-> {
-  constructor(props: DroppableComponentProps) {
-    super(props);
-  }
-
-  shouldComponentUpdate(prevProps: DroppableComponentProps) {
-    const presentOrder = this.props.items.map((each) => each.id);
-    const previousOrder = prevProps.items.map((each) => each.id);
-    return !isEqual(presentOrder, previousOrder);
-  }
-
+export class DroppableComponent extends PureComponent<DroppableComponentProps> {
   onUpdate = (itemsOrder: number[]) => {
     const newOrderedItems = itemsOrder.map((each) => this.props.items[each]);
     this.props.updateItems(newOrderedItems);
@@ -50,6 +37,7 @@ export class DroppableComponent extends React.Component<
       updateOption,
       toggleVisibility,
       onEdit,
+      items
     } = this.props;
     return (
       <DraggableList
@@ -64,7 +52,7 @@ export class DroppableComponent extends React.Component<
           })
         }
         itemHeight={45}
-        items={this.props.items}
+        items={items}
         onUpdate={this.onUpdate}
       />
     );
