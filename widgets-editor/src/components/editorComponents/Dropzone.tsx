@@ -11,6 +11,7 @@ const SPRING_CONFIG = {
   friction: 0,
   tension: 999,
 };
+
 const DropZoneWrapper = styled.div<{
   width: number;
   height: number;
@@ -59,7 +60,6 @@ const getSnappedXY = (
   currentOffset: XYCoord,
   parentOffset: XYCoord,
 ) => {
-  // TODO(abhinav): There is a simpler math to use.
   const [leftColumn, topRow] = snapToGrid(
     parentColumnWidth,
     parentRowHeight,
@@ -71,8 +71,6 @@ const getSnappedXY = (
     Y: topRow * parentRowHeight,
   };
 };
-
-/* eslint-disable react/display-name */
 
 export const DropZone = forwardRef(
   (props: DropZoneProps, ref: Ref<HTMLDivElement>) => {
