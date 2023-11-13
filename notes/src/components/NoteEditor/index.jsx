@@ -4,7 +4,7 @@ import "codemirror/mode/markdown/markdown";
 import "codemirror/lib/codemirror.css";
 import "./index.css";
 
-function NoteEditor({ notes, activeNoteId, saveNote }) {
+const NoteEditor = ({ notes, activeNoteId, saveNote }) => {
   const currentNote = notes[activeNoteId];
   const textareaRef = useRef();
 
@@ -14,14 +14,19 @@ function NoteEditor({ notes, activeNoteId, saveNote }) {
       lineWrapping: true,
     });
 
-    editor.on("change", (doc, change) => {
+    const handleChange = (doc, change) => {
       if (change.origin !== "setValue") {
         saveNote({ text: doc.getValue() });
       }
-    });
+    };
 
-    return () => editor.toTextArea();
-  }, [activeNoteId]);
+    editor.on("change", handleChange);
+
+    return () => {
+      editor.off("change", handleChange);
+      editor.toTextArea();
+    };
+  }, [activeNoteId, saveNote]);
 
   return (
     <div className="note-editor" key={activeNoteId}>
