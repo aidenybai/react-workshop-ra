@@ -55,12 +55,10 @@ const IconContainer = styled.div`
 
 interface Props {
   description?: string;
-  // TODO(Hetu): Fix the banned type here
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  rightIcon: Function;
+  rightIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; // Changed type to React.FunctionComponent
 }
 
-const HelperTooltip = (props: Props) => {
+const HelperTooltip: React.FC<Props> = (props) => { // Changed to functional component syntax
   return (
     <React.Fragment>
       <TooltipStyles />
