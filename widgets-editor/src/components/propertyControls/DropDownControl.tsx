@@ -5,30 +5,26 @@ import { DropdownOption } from "components/ads/Dropdown";
 
 class DropDownControl extends BaseControl<DropDownControlProps> {
   render() {
-    let defaultSelected: DropdownOption = {
+    const defaultSelected: DropdownOption = {
       label: "No results.",
       value: undefined,
     };
 
-    const selected: DropdownOption = this.props.options.find(
+    const selected: DropdownOption | undefined = this.props.options.find(
       (option) => option.value === this.props.propertyValue,
     );
 
-    if (selected) {
-      defaultSelected = selected;
-    }
+    const selectedOption = selected ? selected : defaultSelected;
 
     return (
       <StyledDropDownContainer>
         <StyledDropDown
           options={this.props.options}
-          selected={defaultSelected}
+          selected={selectedOption}
           onSelect={this.onItemSelect}
           width="231px"
           showLabelOnly={true}
-          optionWidth={
-            this.props.optionWidth ? this.props.optionWidth : "231px"
-          }
+          optionWidth={this.props.optionWidth ? this.props.optionWidth : "231px"}
         />
       </StyledDropDownContainer>
     );
@@ -40,7 +36,7 @@ class DropDownControl extends BaseControl<DropDownControlProps> {
     }
   };
 
-  isOptionSelected = (selectedOption: any) => {
+  isOptionSelected = (selectedOption: DropdownOption) => {
     return selectedOption.value === this.props.propertyValue;
   };
 
@@ -50,7 +46,7 @@ class DropDownControl extends BaseControl<DropDownControlProps> {
 }
 
 export interface DropDownControlProps extends ControlProps {
-  options: any[];
+  options: DropdownOption[];
   placeholderText: string;
   propertyValue: string;
   optionWidth?: string;
