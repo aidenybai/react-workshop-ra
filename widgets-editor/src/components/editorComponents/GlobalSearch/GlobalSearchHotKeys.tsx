@@ -1,6 +1,5 @@
 import React from "react";
-import { HotkeysTarget } from "@blueprintjs/core/lib/esnext/components/hotkeys/hotkeysTarget.js";
-import { Hotkey, Hotkeys } from "@blueprintjs/core";
+import { HotkeysTarget, Hotkey, Hotkeys } from "@blueprintjs/core";
 import { SearchItem } from "./utils";
 
 type Props = {
@@ -11,6 +10,7 @@ type Props = {
   handleItemLinkClick: (item?: SearchItem, source?: string) => void;
   children: React.ReactNode;
 };
+
 @HotkeysTarget
 class GlobalSearchHotKeys extends React.Component<Props> {
   get hotKeysConfig() {
