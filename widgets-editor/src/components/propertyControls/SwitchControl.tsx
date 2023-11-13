@@ -6,14 +6,14 @@ class SwitchControl extends BaseControl<ControlProps> {
   render() {
     return (
       <Switch
-        onChange={this.onToggle}
+        onChange={this.handleToggle}
         defaultChecked={this.props.propertyValue}
         large
       />
     );
   }
 
-  onToggle = () => {
+  handleToggle = () => {
     this.updateProperty(this.props.propertyName, !this.props.propertyValue);
   };
 
