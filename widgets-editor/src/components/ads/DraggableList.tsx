@@ -14,40 +14,6 @@ interface SpringStyleProps {
   itemHeight: number;
 }
 
-// Styles when new items are added/removed/updated coz of parent component update.
-const updateSpringStyles = (
-  order: Array<number>,
-  itemHeight: number,
-  immediate = true,
-) => (index: number) => {
-  return {
-    y: order.indexOf(index) * itemHeight,
-    scale: 1,
-    zIndex: "0",
-    shadow: 1,
-    immediate,
-  };
-};
-
-// Styles when items are dragged/idle
-const dragIdleSpringStyles = (
-  order: Array<number>,
-  { down, originalIndex, curIndex, y, itemHeight }: SpringStyleProps,
-) => (index: number) => {
-  // picked/dragged item style
-  if (down && index === originalIndex) {
-    return {
-      y: curIndex * itemHeight + y,
-      scale: 1,
-      zIndex: "1",
-      shadow: 15,
-      immediate: true,
-    };
-  } else {
-    return updateSpringStyles(order, itemHeight, false)(index);
-  }
-};
-
 const DraggableListWrapper = styled.div`
   user-select: none;
   position: relative;
@@ -60,7 +26,6 @@ const DraggableListWrapper = styled.div`
 `;
 
 const DraggableList = ({ items, ItemRenderer, onUpdate, itemHeight }: any) => {
-  // order of items in the list
   const order = useRef<any>(items.map((_: any, index: any) => index));
 
   const onDrop = () => {
@@ -70,7 +35,6 @@ const DraggableList = ({ items, ItemRenderer, onUpdate, itemHeight }: any) => {
   };
 
   useEffect(() => {
-    // when items are updated(added/removed/updated) reassign order and animate springs.
     if (items.length !== order.current.length) {
       order.current = items.map((_: any, index: any) => index);
       setSprings(updateSpringStyles(order.current, itemHeight));
@@ -101,7 +65,6 @@ const DraggableList = ({ items, ItemRenderer, onUpdate, itemHeight }: any) => {
       }),
     );
     if (curRow !== curIndex) {
-      // Feed springs new style data, they'll animate the view without causing a single render
       if (!props.down) {
         order.current = newOrder;
         setSprings(updateSpringStyles(order.current, itemHeight));
@@ -112,7 +75,6 @@ const DraggableList = ({ items, ItemRenderer, onUpdate, itemHeight }: any) => {
   return (
     <DraggableListWrapper
       onMouseDown={() => {
-        // set events to null to stop other parent draggable elements execution(ex: Property pane)
         document.onmouseup = null;
         document.onmousemove = null;
       }}
