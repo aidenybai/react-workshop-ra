@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { Icon, NumericInput } from "@blueprintjs/core";
 import {
@@ -9,7 +9,6 @@ import {
   CommonFunctionsMenuWrapper,
 } from "./TableStyledWrappers";
 import SearchComponent from "components/designSystems/appsmith/SearchComponent";
-// import TableColumnsVisibility from "components/designSystems/appsmith/TableColumnsVisibility";
 import TableFilters, {
   ReactTableFilter,
 } from "components/designSystems/appsmith/TableComponent/TableFilters";
@@ -46,7 +45,7 @@ const PageNumberInput = (props: {
   pageCount: number;
   updatePageNo: (pageNo: number, event?: EventType) => void;
 }) => {
-  const [pageNumber, setPageNumber] = React.useState(props.pageNo || 0);
+  const [pageNumber, setPageNumber] = useState(props.pageNo || 0);
   useEffect(() => {
     setPageNumber(props.pageNo || 0);
   }, [props.pageNo]);
@@ -110,7 +109,7 @@ interface TableHeaderProps {
 }
 
 const TableHeader = (props: TableHeaderProps) => {
-  const tableHeaderWrapperRef = React.createRef<HTMLDivElement>();
+  const tableHeaderWrapperRef = useRef<HTMLDivElement>(null);
 
   return (
     <TableHeaderWrapper
@@ -137,13 +136,6 @@ const TableHeader = (props: TableHeaderProps) => {
           columns={props.tableColumns}
           widgetName={props.widgetName}
         />
-        {/* {props.editMode && (
-          <TableColumnsVisibility
-            columns={props.columns}
-            hiddenColumns={props.hiddenColumns}
-            updateHiddenColumns={props.updateHiddenColumns}
-          />
-        )} */}
         <TableCompactMode
           compactMode={props.compactMode}
           updateCompactMode={props.updateCompactMode}
@@ -154,9 +146,7 @@ const TableHeader = (props: TableHeaderProps) => {
           <PaginationItemWrapper
             className="t--table-widget-prev-page"
             disabled={false}
-            onClick={() => {
-              props.prevPageClick();
-            }}
+            onClick={props.prevPageClick}
           >
             <Icon icon="chevron-left" iconSize={16} color={Colors.HIT_GRAY} />
           </PaginationItemWrapper>
@@ -166,9 +156,7 @@ const TableHeader = (props: TableHeaderProps) => {
           <PaginationItemWrapper
             className="t--table-widget-next-page"
             disabled={false}
-            onClick={() => {
-              props.nextPageClick();
-            }}
+            onClick={props.nextPageClick}
           >
             <Icon icon="chevron-right" iconSize={16} color={Colors.HIT_GRAY} />
           </PaginationItemWrapper>
