@@ -21,15 +21,16 @@ type InputComponentProps = {
   autoFocus?: boolean;
 };
 
-const InputComponent = (props: InputComponentProps) => {
+const InputComponent: React.FC<InputComponentProps> = (props) => {
+  const { placeholder, input, type, intent, disabled, autoFocus } = props;
   return (
     <StyledInputGroup
-      {...props.input}
-      disabled={props.disabled}
-      placeholder={props.placeholder}
-      type={props.type}
-      intent={props.intent as BlueprintIntent}
-      autoFocus={props.autoFocus}
+      {...input}
+      disabled={disabled}
+      placeholder={placeholder}
+      type={type}
+      intent={intent as BlueprintIntent}
+      autoFocus={autoFocus}
     />
   );
 };
