@@ -35,21 +35,13 @@ jobs:
         run: |
           python 2fast4u/github_workflow/optimize_react_workshop.py
 
-      - name: Read output to variable
-        id: script_output
-        run: |
-          echo "RESULT<<EOF" >> $GITHUB_ENV
-          cat output.jsonl >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
       - name: Check python outputs and generate PRs
         env:
           GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
-          PYTHON_CHANGES=$(echo "$RESULT" | jq '.changes')
-          echo "$PYTHON_CHANGES"
           cd ${{ github.workspace }}
-          echo "${PYTHON_CHANGES}" | jq -c '.[]' | while IFS= read -r CHANGE; do
+          jq -c '.changes' output.jsonl > changes.jsonl
+          jq -c '.[]' changes.jsonl | while IFS= read -r CHANGE; do
             path=$(echo "${CHANGE}" | jq -r '.path')
             component=$(echo "${CHANGE}" | jq -r '.component')
             improvement=$(echo "${CHANGE}" | jq -r '.improvement')
