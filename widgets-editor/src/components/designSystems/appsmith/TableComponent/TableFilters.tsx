@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Popover,
   PopoverInteractionKind,
@@ -41,7 +41,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   width: 100%;
   justify-content: flex-start;
-  align-items; center;
+  align-items: center; /* corrected typo */
   background: ${Colors.WHITE};
   margin-top: 14px;
   &&& button:hover {
@@ -83,6 +83,7 @@ const ColumnTypeBindingMessage = styled.div`
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 `;
+
 export interface ReactTableFilter {
   column: string;
   operator: Operator;
@@ -103,22 +104,20 @@ interface TableFilterProps {
 }
 
 const TableFilters = (props: TableFilterProps) => {
-  const [selected, selectMenu] = React.useState(false);
-  const [filters, updateFilters] = React.useState(
-    new Array<ReactTableFilter>(),
-  );
+  const [selected, setSelected] = useState(false); // changed selectMenu to setSelected
+  const [filters, setFilters] = useState<ReactTableFilter[]>([]); // changed updateFilters to setFilters
 
   useEffect(() => {
-    const filters: ReactTableFilter[] = props.filters ? [...props.filters] : [];
-    if (filters.length === 0) {
-      filters.push({
+    const updatedFilters = props.filters ? [...props.filters] : [];
+    if (updatedFilters.length === 0) {
+      updatedFilters.push({
         column: "",
         operator: OperatorTypes.OR,
         value: "",
         condition: "",
       });
     }
-    updateFilters(filters);
+    setFilters(updatedFilters);
   }, [props.filters]);
 
   const addFilter = () => {
@@ -169,7 +168,7 @@ const TableFilters = (props: TableFilterProps) => {
       interactionKind={PopoverInteractionKind.CLICK}
       position={Position.BOTTOM}
       onClose={() => {
-        selectMenu(false);
+        setSelected(false); // changed selectMenu to setSelected
       }}
       isOpen={selected}
     >
@@ -183,7 +182,7 @@ const TableFilters = (props: TableFilterProps) => {
           ) : null
         }
         selectMenu={(selected: boolean) => {
-          selectMenu(selected);
+          setSelected(selected); // changed selectMenu to setSelected
         }}
       >
         <FilterIcon />
@@ -211,13 +210,13 @@ const TableFilters = (props: TableFilterProps) => {
                   props.applyFilter(updatedFilters);
                 }}
                 removeFilter={(index: number) => {
-                  const filters: ReactTableFilter[] = props.filters || [];
-                  if (index === 1 && filters.length > 2) {
-                    filters[2].operator = filters[1].operator;
+                  const updatedFilters = props.filters || [];
+                  if (index === 1 && updatedFilters.length > 2) {
+                    updatedFilters[2].operator = updatedFilters[1].operator;
                   }
                   const newFilters = [
-                    ...filters.slice(0, index),
-                    ...filters.slice(index + 1),
+                    ...updatedFilters.slice(0, index),
+                    ...updatedFilters.slice(index + 1),
                   ];
                   props.applyFilter(newFilters);
                 }}
