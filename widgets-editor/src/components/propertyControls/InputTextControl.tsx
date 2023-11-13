@@ -1,14 +1,7 @@
 import React from "react";
 import BaseControl, { ControlProps } from "./BaseControl";
 import { StyledDynamicInput } from "./StyledControls";
-import { InputType } from "widgets/InputWidget";
 import CodeEditor from "components/editorComponents/CodeEditor";
-import {
-  EditorModes,
-  EditorSize,
-  EditorTheme,
-  TabBehaviour,
-} from "components/editorComponents/CodeEditor/EditorConfig";
 
 export function InputText(props: {
   label: string;
@@ -21,7 +14,7 @@ export function InputText(props: {
   placeholder?: string;
   dataTreePath?: string;
   additionalAutocomplete?: Record<string, Record<string, unknown>>;
-  theme?: EditorTheme;
+  theme?: string;
 }) {
   const {
     errorMessage,
@@ -47,12 +40,7 @@ export function InputText(props: {
           error: isValid ? "" : errorMessage,
           touched: true,
         }}
-        theme={props.theme || EditorTheme.LIGHT}
-        mode={EditorModes.TEXT_WITH_BINDING}
-        tabBehaviour={TabBehaviour.INDENT}
-        size={EditorSize.EXTENDED}
-        placeholder={placeholder}
-        additionalDynamicData={props.additionalAutocomplete}
+        theme={props.theme || "light"}
       />
     </StyledDynamicInput>
   );
@@ -113,7 +101,7 @@ class InputTextControl extends BaseControl<InputControlProps> {
 
 export interface InputControlProps extends ControlProps {
   placeholderText: string;
-  inputType: InputType;
+  inputType: string;
   validationMessage?: string;
   isDisabled?: boolean;
   defaultValue?: any;
