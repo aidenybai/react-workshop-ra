@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { ControlIcons } from "icons/ControlIcons";
-import styled, { AnyStyledComponent } from "styled-components";
+import styled from "styled-components";
 
-const StyledPickMyLocationSelectedIcon = styled(
-  ControlIcons.PICK_MY_LOCATION_SELECTED_CONTROL as AnyStyledComponent,
-)`
+const StyledPickMyLocationSelectedIcon = styled(ControlIcons.PICK_MY_LOCATION_SELECTED_CONTROL)`
   position: relative;
   cursor: pointer;
   height: 28px;
@@ -26,51 +24,41 @@ interface PickMyLocationProps {
   updateCenter: (lat: number, long: number) => void;
 }
 
-interface PickMyLocationState {
-  clicked: boolean;
-  selected: boolean;
-}
-export default class PickMyLocation extends React.Component<
-  PickMyLocationProps,
-  PickMyLocationState
-> {
-  constructor(props: PickMyLocationProps) {
-    super(props);
-    this.state = {
-      selected: false,
-      clicked: false,
-    };
-  }
-  getUserLocation = () => {
+const PickMyLocation: React.FC<PickMyLocationProps> = ({ updateCenter }) => {
+  const [selected, setSelected] = useState(false);
+  const [clicked, setClicked] = useState(false);
+
+  const getUserLocation = () => {
     if ("geolocation" in navigator) {
       return navigator.geolocation.getCurrentPosition((data) => {
         const {
           coords: { latitude: lat, longitude: long },
         } = data;
-        this.setState({ selected: true });
-        this.props.updateCenter(lat, long);
+        setSelected(true);
+        updateCenter(lat, long);
       });
     }
   };
-  render() {
-    return (
-      <PickMyLocationIconWrapper>
-        <StyledPickMyLocationSelectedIcon
-          color={
-            this.state.selected
-              ? "#049ADA"
-              : this.state.clicked
-              ? "#666666"
-              : "#999999"
+
+  return (
+    <PickMyLocationIconWrapper>
+      <StyledPickMyLocationSelectedIcon
+        color={
+          selected
+            ? "#049ADA"
+            : clicked
+            ? "#666666"
+            : "#999999"
+        }
+        onClick={() => {
+          if (!(clicked && selected)) {
+            setClicked(true);
+            getUserLocation();
           }
-          onClick={() => {
-            if (!(this.state.clicked && this.state.selected)) {
-              this.setState({ clicked: true });
-              this.getUserLocation();
-            }
-          }}
-        />
-      </PickMyLocationIconWrapper>
-    );
-  }
-}
+        }}
+      />
+    </PickMyLocationIconWrapper>
+  );
+};
+
+export default PickMyLocation;
