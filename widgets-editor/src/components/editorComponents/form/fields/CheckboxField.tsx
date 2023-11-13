@@ -1,6 +1,6 @@
-import Checkbox, { CheckboxProps } from "components/ads/Checkbox";
 import React from "react";
 import { Field, BaseFieldProps } from "redux-form";
+import Checkbox, { CheckboxProps } from "components/ads/Checkbox";
 
 type RenderComponentProps = CheckboxProps & {
   input?: {
@@ -13,7 +13,9 @@ type RenderComponentProps = CheckboxProps & {
 
 const RenderComponent = (props: RenderComponentProps) => {
   const onChangeHandler = (value: boolean) => {
-    props.input && props.input.onChange && props.input.onChange(value);
+    if (props.input && props.input.onChange) {
+      props.input.onChange(value);
+    }
   };
 
   return (
