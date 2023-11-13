@@ -1,8 +1,7 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import algoliasearch from "algoliasearch/lite";
 import { InstantSearch } from "react-instantsearch-dom";
 import { getAppsmithConfigs } from "configs";
-import { debounce } from "lodash";
 
 const { algolia } = getAppsmithConfigs();
 const searchClient = algoliasearch(algolia.apiId, algolia.apiKey);
@@ -12,15 +11,11 @@ type SearchProps = {
   children: React.ReactNode;
 };
 
-const Search = ({ query, children }: SearchProps) => {
+const AlgoliaSearchWrapper = ({ query, children }: SearchProps) => {
   const [queryInState, setQueryInState] = useState(query);
-  const debouncedSetQueryInState = useCallback(
-    debounce(setQueryInState, 100),
-    [],
-  );
 
   useEffect(() => {
-    debouncedSetQueryInState(query);
+    setQueryInState(query);
   }, [query]);
 
   return (
@@ -34,4 +29,4 @@ const Search = ({ query, children }: SearchProps) => {
   );
 };
 
-export default Search;
+export default AlgoliaSearchWrapper;
