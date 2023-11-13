@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  EditableText as BlueprintEditableText,
-  Classes,
-} from "@blueprintjs/core";
+import { EditableText as BlueprintEditableText, Classes } from "@blueprintjs/core";
 import styled from "styled-components";
 import _ from "lodash";
 import Edit from "assets/images/EditPen.svg?url";
@@ -93,20 +90,12 @@ const TextContainer = styled.div<{ isValid: boolean; minimal: boolean }>`
 
 export const EditableText = (props: EditableTextProps) => {
   const [isEditing, setIsEditing] = useState(!!props.isEditingDefault);
-  const [value, setStateValue] = useState(props.defaultValue);
+  const [value, setValue] = useState(props.defaultValue);
   const inputValRef = useRef("");
   const { beforeUnmount } = props;
 
-  const setValue = useCallback((value) => {
-    inputValRef.current = value;
-    setStateValue(value);
-  }, []);
-
   useEffect(() => {
     setValue(props.defaultValue);
-  }, [props.defaultValue]);
-
-  useEffect(() => {
     setIsEditing(!!props.isEditingDefault);
   }, [props.defaultValue, props.isEditingDefault]);
 
@@ -114,8 +103,6 @@ export const EditableText = (props: EditableTextProps) => {
     if (props.forceDefault === true) setValue(props.defaultValue);
   }, [props.forceDefault, props.defaultValue]);
 
-  // at times onTextChange is not fired
-  // for example when the modal is closed on clicking the overlay
   useEffect(() => {
     return () => {
       if (typeof beforeUnmount === "function")
@@ -128,6 +115,7 @@ export const EditableText = (props: EditableTextProps) => {
     e.preventDefault();
     e.stopPropagation();
   };
+
   const onChange = (_value: string) => {
     props.onBlur && props.onBlur();
     const isInvalid = props.isInvalid ? props.isInvalid(_value) : false;
