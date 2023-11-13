@@ -1,19 +1,19 @@
-import React from "react";
-
+import React, { ChangeEvent } from "react";
 import BaseControl, { ControlProps } from "./BaseControl";
 import { StyledPropertyPaneButton } from "./StyledControls";
 import { generateReactKey } from "utils/generators";
-import styled from "constants/DefaultTheme";
-import { AnyStyledComponent } from "styled-components";
+import styled, { AnyStyledComponent } from "styled-components";
 import { FormIcons } from "icons/FormIcons";
 import { InputText } from "components/propertyControls/InputTextControl";
 import { ActionCreator } from "components/editorComponents/ActionCreator";
 import { Size, Category } from "components/ads/Button";
+
 export interface ColumnAction {
   label: string;
   id: string;
   dynamicTrigger: string;
 }
+
 const StyledDeleteIcon = styled(FormIcons.DELETE_ICON as AnyStyledComponent)`
   padding: 5px 0px;
   position: absolute;
@@ -34,29 +34,21 @@ const Wrapper = styled.div`
   margin-bottom: 8px;
 `;
 
-class ColumnActionSelectorControl extends BaseControl<
-  ColumnActionSelectorControlProps
-> {
+class ColumnActionSelectorControl extends BaseControl<ColumnActionSelectorControlProps> {
   render() {
     return (
       <React.Fragment>
         {this.props.propertyValue &&
           this.props.propertyValue.map((columnAction: ColumnAction) => {
             return (
-              <div
-                key={columnAction.id}
-                style={{
-                  position: "relative",
-                }}
-              >
+              <div key={columnAction.id} style={{ position: "relative" }}>
                 <InputTextWrapper>
                   <InputText
                     label={columnAction.label}
                     value={columnAction.label}
-                    onChange={this.updateColumnActionLabel.bind(
-                      this,
-                      columnAction,
-                    )}
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement> | string) =>
+                      this.updateColumnActionLabel(columnAction, e)
+                    }
                     evaluatedValue={columnAction.label}
                     isValid={true}
                     theme={this.props.theme}
@@ -67,16 +59,15 @@ class ColumnActionSelectorControl extends BaseControl<
                     value={columnAction.dynamicTrigger}
                     isValid={(columnAction as any).isValid}
                     validationMessage={(columnAction as any).message}
-                    onValueChange={this.updateColumnActionFunction.bind(
-                      this,
-                      columnAction,
-                    )}
+                    onValueChange={(newValue: string) =>
+                      this.updateColumnActionFunction(columnAction, newValue)
+                    }
                   />
                 </Wrapper>
                 <StyledDeleteIcon
                   height={20}
                   width={20}
-                  onClick={this.removeColumnAction.bind(this, columnAction)}
+                  onClick={() => this.removeColumnAction(columnAction)}
                 />
               </div>
             );
@@ -95,38 +86,26 @@ class ColumnActionSelectorControl extends BaseControl<
     );
   }
 
-  updateColumnActionLabel = (
-    columnAction: ColumnAction,
-    newValue: React.ChangeEvent<HTMLTextAreaElement> | string,
-  ) => {
-    let value = newValue;
-    if (typeof newValue !== "string") {
-      value = newValue.target.value;
-    }
-    const update = this.props.propertyValue.map((a: ColumnAction) => {
-      if (a.id === columnAction.id) return { ...a, label: value };
-      return a;
-    });
+  updateColumnActionLabel = (columnAction: ColumnAction, newValue: ChangeEvent<HTMLTextAreaElement> | string) => {
+    const value = typeof newValue !== "string" ? newValue.target.value : newValue;
+    const update = this.props.propertyValue.map((a: ColumnAction) =>
+      a.id === columnAction.id ? { ...a, label: value } : a
+    );
     this.updateProperty(this.props.propertyName, update);
   };
 
-  updateColumnActionFunction = (
-    columnAction: ColumnAction,
-    newValue: string,
-  ) => {
-    const update = this.props.propertyValue.map((a: ColumnAction) => {
-      if (a.id === columnAction.id) return { ...a, dynamicTrigger: newValue };
-      return a;
-    });
+  updateColumnActionFunction = (columnAction: ColumnAction, newValue: string) => {
+    const update = this.props.propertyValue.map((a: ColumnAction) =>
+      a.id === columnAction.id ? { ...a, dynamicTrigger: newValue } : a
+    );
     this.updateProperty(this.props.propertyName, update);
   };
 
   removeColumnAction = (columnAction: ColumnAction) => {
-    const update = this.props.propertyValue.filter(
-      (a: ColumnAction) => a.id !== columnAction.id,
-    );
+    const update = this.props.propertyValue.filter((a: ColumnAction) => a.id !== columnAction.id);
     this.updateProperty(this.props.propertyName, update);
   };
+
   addColumnAction = () => {
     const columnActions = this.props.propertyValue || [];
     const update = columnActions.concat([
