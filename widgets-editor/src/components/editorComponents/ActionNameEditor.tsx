@@ -1,25 +1,16 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import EditableText, {
-  EditInteractionKind,
-} from "components/editorComponents/EditableText";
+import EditableText from "components/editorComponents/EditableText";
 import { removeSpecialChars, isNameValid } from "utils/helpers";
 import { AppState } from "reducers";
 import { Action } from "entities/Action";
 import { getDataTree } from "selectors/dataTreeSelectors";
 import { getExistingPageNames } from "sagas/selectors";
-
 import { saveActionName } from "actions/actionActions";
 import { Spinner } from "@blueprintjs/core";
 import { checkCurrentStep } from "sagas/OnboardingSagas";
-import {
-  EditableText as NewEditableText,
-  EditInteractionKind as NewEditInteractionKind,
-  SavingState,
-} from "components/ads/EditableText";
 import { Classes } from "@blueprintjs/core";
 import { OnboardingStep } from "constants/OnboardingConstants";
 import log from "loglevel";
@@ -49,12 +40,6 @@ const ApiNameWrapper = styled.div<{ page?: string }>`
 `;
 
 type ActionNameEditorProps = {
-  /*
-    This prop checks if page is API Pane or Query Pane or Curl Pane
-    So, that we can toggle between ads editable-text component and existing editable-text component
-    Right now, it's optional so that it doesn't impact any other pages other than API Pane.
-    In future, when default component will be ads editable-text, then we can remove this prop.
-  */
   page?: string;
 };
 
@@ -68,7 +53,6 @@ export const ActionNameEditor = (props: ActionNameEditorProps) => {
     log.error("No API id or Query id found in the url.");
   }
 
-  // For onboarding
   const hideEditIcon = useSelector((state: AppState) =>
     checkCurrentStep(state, OnboardingStep.SUCCESSFUL_BINDING, "LESSER"),
   );
@@ -140,16 +124,12 @@ export const ActionNameEditor = (props: ActionNameEditorProps) => {
     } else if (saveStatus.isSaving === true) {
       setForceUpdate(false);
     } else if (saveStatus.isSaving === false && saveStatus.error === false) {
-      // Construct URLSearchParams object instance from current URL querystring.
       const queryParams = new URLSearchParams(window.location.search);
-
       if (
         queryParams.has("editName") &&
         queryParams.get("editName") === "true"
       ) {
-        // Set new or modify existing parameter value.
         queryParams.set("editName", "false");
-        // Replace current querystring with the new one.
         history.replaceState({}, "", "?" + queryParams.toString());
       }
     }
@@ -158,8 +138,7 @@ export const ActionNameEditor = (props: ActionNameEditorProps) => {
   return (
     <ApiNameWrapper page={props.page}>
       {props.page === "API_PANE" ? (
-        <NewEditableText
-          className="t--action-name-edit-field"
+        <EditableText
           defaultValue={currentActionConfig ? currentActionConfig.name : ""}
           placeholder="Name of the API in camelCase"
           forceDefault={forceUpdate}
@@ -170,19 +149,10 @@ export const ActionNameEditor = (props: ActionNameEditorProps) => {
           savingState={
             saveStatus.isSaving ? SavingState.STARTED : SavingState.NOT_STARTED
           }
-          editInteractionKind={NewEditInteractionKind.SINGLE}
-          hideEditIcon
-          underline
-          fill
         />
       ) : (
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
+        <div>
           <EditableText
-            className="t--action-name-edit-field"
             type="text"
             defaultValue={currentActionConfig ? currentActionConfig.name : ""}
             placeholder="Name of the API in camelCase"
@@ -192,7 +162,6 @@ export const ActionNameEditor = (props: ActionNameEditorProps) => {
             valueTransform={removeSpecialChars}
             isEditingDefault={isNew}
             updating={saveStatus.isSaving}
-            editInteractionKind={EditInteractionKind.SINGLE}
           />
           {saveStatus.isSaving && <Spinner size={16} />}
         </div>
