@@ -7,13 +7,11 @@ class ColorPickerControl extends BaseControl<ColorPickerControlProps> {
     this.updateProperty(this.props.propertyName, color);
   };
   render() {
+    const { propertyValue, defaultColor } = this.props;
+    const color = propertyValue ? propertyValue : defaultColor;
     return (
       <ColorPickerComponent
-        color={
-          this.props.propertyValue
-            ? this.props.propertyValue
-            : this.props.defaultColor
-        }
+        color={color}
         changeColor={this.handleChangeColor}
       />
     );
