@@ -1,14 +1,5 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useContext,
-} from "react";
-import {
-  EditableText as BlueprintEditableText,
-  Classes as BlueprintClasses,
-} from "@blueprintjs/core";
+import React, { useState, useEffect, useMemo, useCallback, useContext } from "react";
+import { EditableText as BlueprintEditableText, Classes as BlueprintClasses } from "@blueprintjs/core";
 import styled, { ThemeContext } from "styled-components";
 import Text, { TextType } from "./Text";
 import Spinner from "./Spinner";
@@ -48,15 +39,9 @@ export type EditableTextProps = CommonComponentProps & {
 export const EditableTextWrapper = styled.div<{
   filled: boolean;
 }>`
-  ${(props) =>
-    !props.filled
-      ? `
-    width: 243px;
-  `
-      : `
-    width: 100%;
-    flex: 1;
-  `}
+  width: ${(props) => (props.filled ? "100%" : "243px")};
+  flex: ${(props) => (props.filled ? "1" : "none")};
+
   .error-message {
     margin-left: ${(props) => props.theme.spaces[5]}px;
     color: ${(props) => props.theme.colors.danger.main};
@@ -86,15 +71,14 @@ const TextContainer = styled.div<{
 }>`
   display: flex;
   align-items: center;
+
   .bp4-editable-text.bp4-editable-text-editing::before,
   .bp4-editable-text.bp4-disabled::before {
     display: none;
   }
 
-  &&&
-    .${BlueprintClasses.EDITABLE_TEXT_CONTENT},
-    &&&
-    .${BlueprintClasses.EDITABLE_TEXT_INPUT} {
+  &&& .${BlueprintClasses.EDITABLE_TEXT_CONTENT},
+  &&& .${BlueprintClasses.EDITABLE_TEXT_INPUT} {
     font-size: ${(props) => props.theme.typography.p1.fontSize}px;
     line-height: ${(props) => props.theme.typography.p1.lineHeight}px;
     letter-spacing: ${(props) => props.theme.typography.p1.letterSpacing}px;
