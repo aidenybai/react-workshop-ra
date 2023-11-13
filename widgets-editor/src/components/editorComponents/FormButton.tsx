@@ -7,7 +7,7 @@ type FormButtonProps = {
   intent: Intent;
 };
 
-export default styled(Button)<FormButtonProps>`
+const FormButton = styled(Button)<FormButtonProps>`
   &&& {
     font-weight: ${(props) => props.theme.fontWeights[2]};
     border: none;
@@ -26,3 +26,5 @@ export default styled(Button)<FormButtonProps>`
     }
   }
 `;
+
+export default FormButton;
