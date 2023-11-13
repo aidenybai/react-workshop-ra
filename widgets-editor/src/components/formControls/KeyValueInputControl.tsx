@@ -1,8 +1,7 @@
-import React, { JSXElementConstructor, useEffect } from "react";
+import React, { useEffect } from "react";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 import styled from "styled-components";
 import { Icon } from "@blueprintjs/core";
-import { FormIcons } from "icons/FormIcons";
 import BaseControl, { ControlProps, ControlData } from "./BaseControl";
 import TextField from "components/editorComponents/form/fields/TextField";
 import { ControlType } from "constants/PropertyControlConstants";
@@ -38,12 +37,10 @@ const KeyValueRow = (props: Props & WrappedFieldArrayProps) => {
           {props.fields.map((field: any, index: number) => (
             <FormRowWithLabel key={index} style={{ marginTop: index ? 13 : 0 }}>
               <div style={{ width: "50vh" }}>
-                {/* <FormLabel></FormLabel> */}
                 <TextField name={`${field}.key`} placeholder="Key" />
               </div>
 
               <div style={{ marginLeft: 16 }}>
-                {/* <FormLabel></FormLabel> */}
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   <div style={{ marginRight: 14, width: "50vh" }}>
                     <TextField name={`${field}.value`} placeholder="Value" />
@@ -58,12 +55,12 @@ const KeyValueRow = (props: Props & WrappedFieldArrayProps) => {
                       style={{ alignSelf: "center" }}
                     />
                   ) : (
-                    <FormIcons.DELETE_ICON
+                    <Icon
                       className="t--delete-field"
-                      height={20}
-                      width={20}
-                      color={Colors.CADET_BLUE}
+                      icon="trash"
+                      iconSize={20}
                       onClick={() => props.fields.remove(index)}
+                      color={Colors.CADET_BLUE}
                       style={{ alignSelf: "center" }}
                     />
                   )}
@@ -80,7 +77,7 @@ const KeyValueRow = (props: Props & WrappedFieldArrayProps) => {
 type Props = {
   name: string;
   label: string;
-  rightIcon?: JSXElementConstructor<{ height: number; width: number }>;
+  rightIcon?: JSX.Element;
   description?: string;
   actionConfig?: any;
   extraData?: ControlData[];
@@ -107,7 +104,7 @@ class KeyValueFieldInput extends BaseControl<KeyValueInputProps> {
 export interface KeyValueInputProps extends ControlProps {
   name: string;
   label: string;
-  rightIcon?: JSXElementConstructor<{ height: number; width: number }>;
+  rightIcon?: JSX.Element;
   description?: string;
   actionConfig?: any;
 }
