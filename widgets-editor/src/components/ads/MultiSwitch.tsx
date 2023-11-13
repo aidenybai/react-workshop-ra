@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { CommonComponentProps } from "./common";
-import Text, { Case, TextType } from "./Text";
 
-export type TabProp<T> = {
+type TabProp<T> = {
   key: string;
   title: T;
   panelComponent: JSX.Element;
@@ -58,9 +57,7 @@ export default function MultiSwitch<T>(props: MultiSwitchProps<T>) {
             selected={props.selected.value === tab.key}
             onClick={() => props.onSelect(tab.title)}
           >
-            <Text type={TextType.P3} case={Case.UPPERCASE}>
-              {tab.title}
-            </Text>
+            {tab.title}
           </Tab>
         ))}
       </TabList>
