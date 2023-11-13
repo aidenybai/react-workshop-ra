@@ -3,18 +3,20 @@ import { ControlIcons } from "icons/ControlIcons";
 import { Colors } from "constants/Colors";
 import styled from "styled-components";
 import { Tooltip, Classes } from "@blueprintjs/core";
-// I honestly can't think of a better name for this enum
+
 export enum Activities {
   HOVERING,
   SELECTED,
   ACTIVE,
   NONE,
 }
+
 const StyledTooltip = styled(Tooltip)`
   .${Classes.POPOVER_TARGET} {
     height: 100%;
   }
 `;
+
 const SettingsWrapper = styled.div`
   justify-self: flex-end;
   height: 100%;
