@@ -1,8 +1,5 @@
 import * as React from "react";
 import { WrappedFieldProps } from "redux-form";
-import "@uppy/core/dist/style.css";
-import "@uppy/dashboard/dist/style.css";
-import "@uppy/webcam/dist/style.css";
 import { Field } from "redux-form";
 import styled from "styled-components";
 import Uppy from "@uppy/core";
@@ -88,7 +85,6 @@ class FieldFileInput extends React.Component<Props, FieldFileInputState> {
   };
 
   openModal = () => {
-    // this.setState({ isOpen: true });
     this.uppy.getPlugin("Dashboard").openModal();
   };
 
@@ -113,13 +109,6 @@ class FieldFileInput extends React.Component<Props, FieldFileInputState> {
 }
 
 class FilePickerControl extends BaseControl<FilePickerControlProps> {
-  constructor(props: FilePickerControlProps) {
-    super(props);
-    this.state = {
-      isOpen: false,
-    };
-  }
-
   render() {
     const { configProperty, label, isRequired } = this.props;
 
@@ -137,11 +126,5 @@ class FilePickerControl extends BaseControl<FilePickerControlProps> {
     return "FILE_PICKER";
   }
 }
-
-export interface FilePickerComponentState {
-  isOpen: boolean;
-}
-
-export type FilePickerControlProps = ControlProps;
 
 export default FilePickerControl;
