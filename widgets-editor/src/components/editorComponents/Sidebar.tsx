@@ -10,7 +10,6 @@ const SidebarWrapper = styled.div`
   padding: 0;
   width: ${(props) => props.theme.sidebarWidth};
   z-index: 3;
-
   color: ${(props) => props.theme.colors.textOnDarkBG};
   overflow-y: auto;
   & .${Classes.PANEL_STACK} {
