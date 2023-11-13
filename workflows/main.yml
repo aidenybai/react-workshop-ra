@@ -1,0 +1,75 @@
+name: Generate Performance Optimizing Pull Requests
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  generate-performance-optimizing-pull-requests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Clone 2fast4u
+        run: |
+          git clone https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/aidenybai/2fast4u.git
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f 2fast4u/github_workflow/requirements.txt ]; then pip install -r 2fast4u/github_workflow/requirements.txt; fi
+
+      - name: Run Python script and write to file
+        run: |
+          python 2fast4u/github_workflow/script.py
+
+      - name: Read output to variable
+        id: script_output
+        run: |
+          echo "RESULT<<EOF" >> $GITHUB_ENV
+          cat output.jsonl >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Check python outputs and generate PRs
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          PYTHON_CHANGES=$(echo "$RESULT" | jq '.changes')
+          echo "$PYTHON_CHANGES"
+          cd ${{ github.workspace }}
+          echo "${PYTHON_CHANGES}" | jq -c '.[]' | while IFS= read -r CHANGE; do
+            path=$(echo "${CHANGE}" | jq -r '.path')
+            component=$(echo "${CHANGE}" | jq -r '.component')
+            improvement=$(echo "${CHANGE}" | jq -r '.improvement')
+            log=$(echo "${CHANGE}" | jq -r '.log')
+            echo "Changed File: $path"
+            echo "Component: $component"
+            echo "Improvement: $improvement"
+            echo "Edits: $log"
+            git config user.email "aiden.bai05@gmail.com"
+            git config user.name "Aiden Bai"
+            BRANCH_NAME="auto-optimization-${path//[^a-zA-Z0-9]/-}-${{ github.run_number }}"
+            git checkout -b "$BRANCH_NAME"
+            git add "$path"
+            git commit -m "auto-optimize: $path"
+            git push -u origin "$BRANCH_NAME"
+            gh pr create \
+              --title "🦁 perf($path): improve $component component rendering by $improvement%" \
+              --body "$log" \
+              --base main \
+              --head "$BRANCH_NAME" \
+              --label "automated pr"
+            git checkout main
+          done
