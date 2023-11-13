@@ -21,20 +21,15 @@ class LocationSearchControl extends BaseControl<ControlProps> {
 
   onLocationSelection = () => {
     try {
-      // For some places, the length is zero
-      const places = this.searchBox.getPlaces();
-      const location = places[0].geometry.location;
-      const title = places[0].formatted_address;
-      const lat = location.lat();
-      const long = location.lng();
+      const places = this.searchBox?.getPlaces() || [];
+      const location = places[0]?.geometry.location;
+      const title = places[0]?.formatted_address;
+      const lat = location?.lat();
+      const long = location?.lng();
       const value = { lat, long, title };
       this.updateProperty(this.props.propertyName, value);
     } catch (e) {
-      if (this.searchBox && this.searchBox.getPlaces)
-        log.debug("Error selecting location:", this.searchBox.getPlaces());
-      else {
-        log.debug("Error selecting location - searchBox not found");
-      }
+      log.debug("Error selecting location:", e);
     }
   };
 
