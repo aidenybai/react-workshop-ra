@@ -29,11 +29,10 @@ export const RichtextEditorComponent = (
   );
 
   const [isEditorInitialised, setIsEditorInitialised] = useState(false);
-  const [editorInstance, setEditorInstance] = useState(null as any);
+  const [editorInstance, setEditorInstance] = useState<any>(null);
 
-  /* Using editorContent as a variable to save editor content locally to verify against new content*/
-  const editorContent = useRef("");
-  /* eslint-disable react-hooks/exhaustive-deps */
+  const editorContent = useRef<string>("");
+
   useEffect(() => {
     if (editorInstance !== null) {
       editorInstance.mode.set(
@@ -48,20 +47,24 @@ export const RichtextEditorComponent = (
       (editorContent.current.length === 0 ||
         editorContent.current !== props.defaultValue)
     ) {
-      const content = props.defaultValue;
+      const content = props.defaultValue || "";
 
       editorInstance.setContent(content, {
         format: "html",
       });
     }
   }, [props.defaultValue, editorInstance, isEditorInitialised]);
+
   useEffect(() => {
     if (status !== ScriptStatus.READY) return;
+
     const onChange = debounce((content: string) => {
       editorContent.current = content;
       props.onValueChange(content);
     }, 200);
+
     const selector = `textarea#rte-${props.widgetId}`;
+
     (window as any).tinyMCE.init({
       forced_root_block: false,
       height: "100%",
@@ -71,19 +74,10 @@ export const RichtextEditorComponent = (
       resize: false,
       setup: (editor: any) => {
         editor.mode.set(props.isDisabled === true ? "readonly" : "design");
-        const content = props.defaultValue;
+        const content = props.defaultValue || "";
         editor.setContent(content, { format: "html" });
         editor
-          .on("Change", () => {
-            onChange(editor.getContent({ format: "html" }));
-          })
-          .on("Undo", () => {
-            onChange(editor.getContent({ format: "html" }));
-          })
-          .on("Redo", () => {
-            onChange(editor.getContent({ format: "html" }));
-          })
-          .on("KeyUp", () => {
+          .on("Change Undo Redo KeyUp", () => {
             onChange(editor.getContent({ format: "html" }));
           });
         setEditorInstance(editor);
