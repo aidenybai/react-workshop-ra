@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   width: 50vh;
 `;
 
-class FixKeyInputControl extends BaseControl<FixedKeyInputControlProps> {
+class FixedKeyInputControl extends BaseControl<FixedKeyInputControlProps> {
   render() {
     const {
       label,
@@ -32,15 +32,12 @@ class FixKeyInputControl extends BaseControl<FixedKeyInputControlProps> {
           type={this.getType(dataType)}
           showError
           format={(value) => {
-            // Get the value property
             if (value) {
               return value.value;
             }
-
             return "";
           }}
           parse={(value) => {
-            // Store the value in this field as {key: fixedKey, value: <user-input>}
             return {
               key: fixedKey,
               value: value,
@@ -74,4 +71,4 @@ export interface FixedKeyInputControlProps extends ControlProps {
   fixedKey: string;
 }
 
-export default FixKeyInputControl;
+export default FixedKeyInputControl;
