@@ -1,14 +1,5 @@
 import React, { useCallback, useState } from "react";
 import BaseControl, { ControlProps } from "./BaseControl";
-import {
-  StyledInputGroup,
-  StyledDragIcon,
-  StyledEditIcon,
-  StyledDeleteIcon,
-  StyledVisibleIcon,
-  StyledHiddenIcon,
-  StyledPropertyPaneButton,
-} from "./StyledControls";
 import styled from "constants/DefaultTheme";
 import { DroppableComponent } from "components/ads/DraggableListComponent";
 import { ColumnProperties } from "components/designSystems/appsmith/TableComponent/Constants";
