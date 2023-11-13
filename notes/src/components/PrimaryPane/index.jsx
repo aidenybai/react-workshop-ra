@@ -15,14 +15,12 @@ function PrimaryPane({ activeNoteId, notes, saveNote }) {
 
   const togglePublic = async () => {
     setIsLoading(true);
+    const newPublicStatus = !isPublic;
+    await fakeApi.setPublicStatus(newPublicStatus);
+    setIsPublic(newPublicStatus);
 
-    if (isPublic) {
-      await fakeApi.setPublicStatus(false);
-      setIsPublic(false);
-    } else {
-      await fakeApi.setPublicStatus(true);
+    if (newPublicStatus) {
       const publishedDate = await fakeApi.getPublishedDate();
-      setIsPublic(true);
       setPublishedAt(publishedDate.toLocaleTimeString());
     }
 
