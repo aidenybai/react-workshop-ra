@@ -9,7 +9,7 @@ import { AppState } from "reducers";
 import { createMessage, OMNIBAR_PLACEHOLDER } from "constants/messages";
 
 const Container = styled.div`
-  padding: ${(props) => `0 ${props.theme.spaces[11]}px`};
+  padding: 0 ${(props) => props.theme.spaces[11]}px;
   & input {
     ${(props) => getTypographyByKey(props, "cardSubheader")}
     background: transparent;
@@ -56,11 +56,10 @@ const SearchBox = ({ query, setQuery }: SearchBoxProps) => {
 
   const updateSearchQuery = useCallback(
     (query) => {
-      // to prevent key combo to open modal from trigging query update
       if (!listenToChange) return;
       setQuery(query);
     },
-    [listenToChange],
+    [listenToChange, setQuery],
   );
 
   return (
