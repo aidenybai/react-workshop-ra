@@ -10,19 +10,12 @@ import {
   TextSize,
   TEXT_SIZES,
 } from "constants/WidgetConstants";
+
 type TextStyleProps = {
   accent: "primary" | "secondary" | "error";
 };
 
 export const BaseText = styled(Text)<TextStyleProps>``;
-
-/*
-  Note:
-  -webkit-line-clamp may seem like a wierd way to doing this
-  however, it is getting more and more useful with more browser support.
-  It suffices for our target browsers
-  More info: https://css-tricks.com/line-clampin/
-*/
 
 export const TextContainer = styled.div`
   && {
@@ -30,6 +23,7 @@ export const TextContainer = styled.div`
     width: 100%;
   }
 `;
+
 const StyledText = styled(Text)<{
   $scroll: boolean;
   $textAlign: string;
