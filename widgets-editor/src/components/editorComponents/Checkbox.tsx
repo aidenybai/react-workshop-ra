@@ -1,14 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import {
-  Checkbox as BlueprintCheckbox,
-  ICheckboxProps,
-} from "@blueprintjs/core";
-import {
-  IntentColors,
-  Intent,
-  getBorderCSSShorthand,
-} from "constants/DefaultTheme";
+import { Checkbox as BlueprintCheckbox, ICheckboxProps } from "@blueprintjs/core";
+import { IntentColors, Intent, getBorderCSSShorthand } from "constants/DefaultTheme";
 
 export type CheckboxProps = ICheckboxProps & {
   intent: Intent;
@@ -21,7 +14,7 @@ export type CheckboxProps = ICheckboxProps & {
   label: string;
 };
 
-export const StyledCheckbox = styled(BlueprintCheckbox)<CheckboxProps>`
+const StyledCheckbox = styled(BlueprintCheckbox)<CheckboxProps>`
   &&&& {
     span.bp4-control-indicator {
       outline: none;
@@ -39,11 +32,11 @@ export const StyledCheckbox = styled(BlueprintCheckbox)<CheckboxProps>`
   }
 `;
 
-export const Checkbox = (props: CheckboxProps) => {
-  const handleChange = (e: any) => {
-    props.input &&
-      props.input.onChange &&
+const Checkbox = (props: CheckboxProps) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (props.input && props.input.onChange) {
       props.input.onChange(e.target.checked);
+    }
   };
   return (
     <StyledCheckbox
