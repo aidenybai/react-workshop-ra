@@ -9,7 +9,7 @@ type RenderComponentProps = TextInputProps & {
   };
 };
 
-const RenderComponent = (props: RenderComponentProps) => {
+const RenderComponent: React.FC<RenderComponentProps> = (props) => {
   const onChangeHandler = (value: number) => {
     props.input && props.input.onChange && props.input.onChange(value);
   };
@@ -23,17 +23,15 @@ const RenderComponent = (props: RenderComponentProps) => {
   );
 };
 
-class NumberField extends React.Component<BaseFieldProps & TextInputProps> {
-  render() {
-    return (
-      <Field
-        component={RenderComponent}
-        {...this.props}
-        noValidate
-        disabled={this.props.disabled}
-      />
-    );
-  }
-}
+const NumberField: React.FC<BaseFieldProps & TextInputProps> = (props) => {
+  return (
+    <Field
+      component={RenderComponent}
+      {...props}
+      noValidate
+      disabled={props.disabled}
+    />
+  );
+};
 
 export default NumberField;
