@@ -53,8 +53,12 @@ jobs:
             git config user.name "Aiden Bai"
             BRANCH_NAME="auto-optimization-${path//[^a-zA-Z0-9]/-}-${{ github.run_number }}"
             git checkout -b "$BRANCH_NAME"
-            git add "$path" || (echo "Retrying add..." && git add "$path")
-            git commit -m "auto-optimize: $path" || (echo "Retrying commit..." && git commit -m "auto-optimize: $path")
+            git add "$path" || { echo "Retrying add..."; git add "$path"; }
+            if ! git commit -m "auto-optimize: $path"; then
+              echo "Commit failed for $path, skipping..."
+              git checkout main
+              continue
+            fi
             git push -u origin "$BRANCH_NAME" || echo "Failed to push $BRANCH_NAME, continuing..."
             gh pr create \
               --title "🦁 perf($path): improve $component component" \
