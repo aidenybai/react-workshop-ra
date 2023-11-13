@@ -1,7 +1,7 @@
-import { Alignment, Classes, Switch } from "@blueprintjs/core";
-import { BlueprintControlTransform } from "constants/DefaultTheme";
 import React from "react";
 import styled from "styled-components";
+import { Switch } from "@blueprintjs/core";
+import { Alignment, Classes } from "@blueprintjs/core";
 import { AlignWidget } from "widgets/SwitchWidget";
 import { ComponentProps } from "../appsmith/BaseComponent";
 
@@ -23,7 +23,6 @@ const SwitchComponentContainer = styled.div`
   &.${Alignment.RIGHT} {
     justify-content: flex-end;
   }
-  ${BlueprintControlTransform}
 `;
 
 export const SwitchComponent: React.FC<SwitchComponentProps> = ({
@@ -31,7 +30,6 @@ export const SwitchComponent: React.FC<SwitchComponentProps> = ({
   isSwitchedOn,
   alignWidget,
   onChange,
-  isDisabled,
   isLoading,
 }) => {
   const switchAlignClass =
@@ -42,7 +40,6 @@ export const SwitchComponent: React.FC<SwitchComponentProps> = ({
       <Switch
         alignIndicator={switchAlignClass}
         label={label}
-        disabled={isDisabled}
         className={
           isLoading
             ? `${Classes.SKELETON} t--switch-widget-loading`
