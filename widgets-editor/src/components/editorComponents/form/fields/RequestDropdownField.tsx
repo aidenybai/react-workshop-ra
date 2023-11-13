@@ -17,17 +17,15 @@ interface RequestDropdownProps {
   optionWidth?: string;
 }
 
-const renderComponent = (
-  componentProps: WrappedFieldProps & RequestDropdownProps,
-) => {
-  return (
-    <React.Fragment>
-      <DropdownFieldWrapper {...componentProps} />
-    </React.Fragment>
-  );
-};
-
 const RequestDropdownField = (props: RequestDropdownProps) => {
+  const renderComponent = (componentProps: WrappedFieldProps & RequestDropdownProps) => {
+    return (
+      <React.Fragment>
+        <DropdownFieldWrapper {...componentProps} />
+      </React.Fragment>
+    );
+  };
+
   return (
     <Field
       component={renderComponent}
