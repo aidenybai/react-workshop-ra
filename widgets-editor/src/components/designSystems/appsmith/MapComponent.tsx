@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap, Marker, StandaloneSearchBox } from "@react-google-maps/api";
 import { MarkerProps } from "widgets/MapWidget";
 import PickMyLocation from "./PickMyLocation";
@@ -60,9 +60,6 @@ const StyledInput = styled.input`
   outline: none;
   text-overflow: ellipses;
 `;
-type PickMyLocationProps = {
-  allowZoom: boolean;
-};
 
 const PickMyLocationWrapper = styled.div<PickMyLocationProps>`
   position: absolute;
@@ -71,16 +68,13 @@ const PickMyLocationWrapper = styled.div<PickMyLocationProps>`
   width: 140px;
 `;
 
-const MyMapComponent = (props: any) => {
-  const [mapCenter, setMapCenter] = React.useState<
-    | {
-        lat: number;
-        lng: number;
-        title?: string;
-        description?: string;
-      }
-    | undefined
-  >({
+const MyMapComponent = (props: MapComponentProps) => {
+  const [mapCenter, setMapCenter] = useState<{
+    lat: number;
+    lng: number;
+    title?: string;
+    description?: string;
+  }>({
     ...props.center,
     lng: props.center.long,
   });
@@ -122,7 +116,7 @@ const MyMapComponent = (props: any) => {
         rotateControl: false,
         streetViewControl: false,
       }}
-      zoom={props.zoom}
+      zoom={props.zoomLevel / 5}
       center={mapCenter}
       onClick={(e) => {
         if (props.enableCreateMarker) {
@@ -140,7 +134,7 @@ const MyMapComponent = (props: any) => {
           <StyledInput type="text" placeholder="Enter location to search" />
         </StandaloneSearchBox>
       )}
-      {props.markers.map((marker: any, index: number) => (
+      {props.markers?.map((marker: MarkerProps, index: number) => (
         <Marker
           key={index}
           title={marker.title}
@@ -176,7 +170,6 @@ const MyMapComponent = (props: any) => {
 };
 
 const MapComponent = (props: MapComponentProps) => {
-  const zoom = Math.floor(props.zoomLevel / 5);
   const status = useScript(
     `https://maps.googleapis.com/maps/api/js?key=${props.apiKey}&v=3.exp&libraries=geometry,drawing,places`,
     AddScriptTo.HEAD,
@@ -184,13 +177,7 @@ const MapComponent = (props: MapComponentProps) => {
   return (
     <MapWrapper onMouseLeave={props.enableDrag}>
       {status === ScriptStatus.READY && (
-        <MyMapComponent
-          loadingElement={<MapContainerWrapper />}
-          containerElement={<MapContainerWrapper />}
-          mapElement={<MapContainerWrapper />}
-          {...props}
-          zoom={zoom}
-        />
+        <MyMapComponent {...props} />
       )}
     </MapWrapper>
   );
