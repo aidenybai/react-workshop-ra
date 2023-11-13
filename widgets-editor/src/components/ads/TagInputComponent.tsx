@@ -7,6 +7,7 @@ import {
   INVITE_USERS_VALIDATION_EMAIL_LIST,
 } from "constants/messages";
 import { isEmail } from "utils/formhelpers";
+
 const TagInputWrapper = styled.div<{ intent?: Intent }>`
   margin-right: 8px;
 
@@ -38,35 +39,24 @@ const TagInputWrapper = styled.div<{ intent?: Intent }>`
     }
   }
 `;
+
 type TagInputProps = {
-  /** TagInput Placeholder */
   placeholder: string;
-  /** TagInput value and onChange handler */
   input: {
     value?: string;
     onChange?: (value: string) => void;
   };
-  /** TagInput type of individual entries (HTML input types) */
   type: string;
-  /** A delimiter which decides when to separate string into tags */
   separator?: string | RegExp | undefined;
-  /** Intent of the tags, which defines their color */
   intent?: Intent;
   hasError?: boolean;
   customError: (values: any) => void;
 };
 
-/**
- * TagInputComponent
- * Takes in a comma separated set of values (input.value prop) to display in tags
- * On addition or removal of tags, passes the comman separated string to input.onChange prop
- * @param props : TagInputProps
- */
 const TagInputComponent = (props: TagInputProps) => {
-  const _values =
-    props.input.value && props.input.value.length > 0
-      ? props.input.value.split(",")
-      : [];
+  const _values = props.input.value && props.input.value.length > 0
+    ? props.input.value.split(",")
+    : [];
 
   const [values, setValues] = useState<string[]>(_values || []);
   const [currentValue, setCurrentValue] = useState<string>("");
@@ -104,7 +94,6 @@ const TagInputComponent = (props: TagInputProps) => {
   };
 
   const onKeyDown = (e: any) => {
-    // Add new values to the tags on comma, return key, space and Tab press.
     if (
       e.key === "," ||
       e.key === "Enter" ||
@@ -123,8 +112,6 @@ const TagInputComponent = (props: TagInputProps) => {
     }
   };
 
-  // The input text field where the user can type in needs to handle the scenario where
-  // The input field is reset on adding tag.
   const handleInputChange = (e: any) => {
     if ([",", " ", "Enter"].indexOf(e.target.value) === -1) {
       setCurrentValue(e.target.value);
