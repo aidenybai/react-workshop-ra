@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 import ActionLink from "./ActionLink";
 import Highlight from "./Highlight";
@@ -147,30 +147,30 @@ const descriptionByType = {
 };
 
 const Description = (props: Props) => {
-  const { activeItem, activeItemType } = props;
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const { activeItem, activeItemType, query, scrollPositionRef } = props;
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const onScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     if (
-      props.scrollPositionRef?.current ||
-      props.scrollPositionRef?.current === 0
+      scrollPositionRef?.current ||
+      scrollPositionRef?.current === 0
     ) {
-      props.scrollPositionRef.current = (e.target as HTMLDivElement).scrollTop;
+      scrollPositionRef.current = (e.target as HTMLDivElement).scrollTop;
     }
-  }, []);
+  }, [scrollPositionRef]);
 
   useEffect(() => {
     if (containerRef.current) {
-      containerRef.current.scrollTop = props.scrollPositionRef?.current;
+      containerRef.current.scrollTop = scrollPositionRef?.current;
     }
-  }, [containerRef.current, activeItem]);
+  }, [containerRef, activeItem, scrollPositionRef]);
 
   if (!activeItemType || !activeItem) return null;
   const Component = descriptionByType[activeItemType];
 
   return (
     <Container onScroll={onScroll} ref={containerRef}>
-      <Component item={activeItem} query={props.query} />
+      <Component item={activeItem} query={query} />
     </Container>
   );
 };
