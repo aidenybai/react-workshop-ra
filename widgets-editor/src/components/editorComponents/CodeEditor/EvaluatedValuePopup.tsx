@@ -91,7 +91,7 @@ const ErrorText = styled.p`
   background-color: rgba(226, 44, 44, 0.08);
   border: 1.2px solid ${(props) => props.theme.colors.errorMessage};
   color: ${(props) => props.theme.colors.errorMessage};
-`;
+};
 
 const StyledTitle = styled.p`
   margin: 8px 0;
