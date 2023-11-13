@@ -1,14 +1,13 @@
-import { Classes, Popover, MenuItem, Menu } from "@blueprintjs/core";
-import { ContainerOrientation } from "constants/WidgetConstants";
-import { DateRangeInput } from "@blueprintjs/datetime";
+import styled, { AnyStyledComponent } from "styled-components";
 import { Colors } from "constants/Colors";
-import styled, { Skin } from "constants/DefaultTheme";
-import { AnyStyledComponent } from "styled-components";
 import { ControlIcons } from "icons/ControlIcons";
 import Button from "components/ads/Button";
 import TextInput from "components/ads/TextInput";
 import Dropdown from "components/ads/Dropdown";
 import MultiSelectDropdown from "components/ads/MultiselectDropdown";
+import { DateRangeInput } from "@blueprintjs/datetime";
+import { Menu, MenuItem, Popover } from "@blueprintjs/core";
+import { ContainerOrientation } from "constants/WidgetConstants";
 
 type ControlWrapperProps = {
   orientation?: ContainerOrientation;
@@ -34,7 +33,7 @@ export const ControlWrapper = styled.div<ControlWrapperProps>`
   &&& > label {
     display: inline-block;
   }
-`;
+};
 
 export const ControlPropertyLabelContainer = styled.div`
   display: flex;
