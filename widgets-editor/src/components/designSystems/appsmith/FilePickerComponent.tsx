@@ -1,14 +1,8 @@
 import * as React from "react";
 import { ComponentProps } from "components/designSystems/appsmith/BaseComponent";
-import "@uppy/core/dist/style.css";
-import "@uppy/dashboard/dist/style.css";
-import "@uppy/webcam/dist/style.css";
 import { BaseButton } from "components/designSystems/blueprint/ButtonComponent";
 
-class FilePickerComponent extends React.Component<
-  FilePickerComponentProps,
-  FilePickerComponentState
-> {
+class FilePickerComponent extends React.Component<FilePickerComponentProps, FilePickerComponentState> {
   constructor(props: FilePickerComponentProps) {
     super(props);
     this.state = {
