@@ -4,10 +4,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "reducers";
 import { PropertyPaneReduxState } from "reducers/uiReducers/propertyPaneReducer";
 import SettingsControl, { Activities } from "./SettingsControl";
-import {
-  useShowPropertyPane,
-  useWidgetSelection,
-} from "utils/hooks/dragResizeHooks";
+import { useShowPropertyPane, useWidgetSelection } from "utils/hooks/dragResizeHooks";
 import AnalyticsUtil from "utils/AnalyticsUtil";
 import { WidgetType } from "constants/WidgetConstants";
 
@@ -42,7 +39,6 @@ type WidgetNameComponentProps = {
 
 export const WidgetNameComponent = (props: WidgetNameComponentProps) => {
   const showPropertyPane = useShowPropertyPane();
-  // Dispatch hook handy to set a widget as focused/selected
   const { selectWidget } = useWidgetSelection();
   const propertyPaneState: PropertyPaneReduxState = useSelector(
     (state: AppState) => state.ui.propertyPane,
@@ -53,7 +49,6 @@ export const WidgetNameComponent = (props: WidgetNameComponentProps) => {
   const focusedWidget = useSelector(
     (state: AppState) => state.ui.widgetDragResize.focusedWidget,
   );
-
   const isResizing = useSelector(
     (state: AppState) => state.ui.widgetDragResize.isResizing,
   );
