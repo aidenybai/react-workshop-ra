@@ -70,6 +70,6 @@ jobs:
               --body "$log" \
               --base main \
               --head "$BRANCH_NAME" \
-              --label "automated pr"
+              --label "perf"
             git checkout main
           done
