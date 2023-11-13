@@ -10,37 +10,36 @@ export const computeRowCols = (
   delta: UIElementSize,
   position: XYCoord,
   props: WidgetProps,
-) => {
-  return {
-    leftColumn: Math.round(
-      props.leftColumn + position.x / props.parentColumnSpace,
-    ),
-    topRow: Math.round(props.topRow + position.y / props.parentRowSpace),
-    rightColumn: Math.round(
-      props.rightColumn + (delta.width + position.x) / props.parentColumnSpace,
-    ),
-    bottomRow: Math.round(
-      props.bottomRow + (delta.height + position.y) / props.parentRowSpace,
-    ),
-  };
+): WidgetRowCols => {
+  const leftColumn = Math.round(
+    props.leftColumn + position.x / props.parentColumnSpace,
+  );
+  const topRow = Math.round(props.topRow + position.y / props.parentRowSpace);
+  const rightColumn = Math.round(
+    props.rightColumn + (delta.width + position.x) / props.parentColumnSpace,
+  );
+  const bottomRow = Math.round(
+    props.bottomRow + (delta.height + position.y) / props.parentRowSpace,
+  );
+
+  return { leftColumn, topRow, rightColumn, bottomRow };
 };
 
-export const computeBoundedRowCols = (rowCols: WidgetRowCols) => {
-  return {
-    leftColumn: Math.max(rowCols.leftColumn, 0),
-    rightColumn: Math.min(
-      rowCols.rightColumn,
-      GridDefaults.DEFAULT_GRID_COLUMNS,
-    ),
-    topRow: rowCols.topRow,
-    bottomRow: rowCols.bottomRow,
-  };
+export const computeBoundedRowCols = (rowCols: WidgetRowCols): WidgetRowCols => {
+  const leftColumn = Math.max(rowCols.leftColumn, 0);
+  const rightColumn = Math.min(
+    rowCols.rightColumn,
+    GridDefaults.DEFAULT_GRID_COLUMNS,
+  );
+  const { topRow, bottomRow } = rowCols;
+
+  return { leftColumn, rightColumn, topRow, bottomRow };
 };
 
 export const hasRowColsChanged = (
   newRowCols: WidgetRowCols,
   props: WidgetProps,
-) => {
+): boolean => {
   return (
     props.leftColumn !== newRowCols.leftColumn ||
     props.topRow !== newRowCols.topRow ||
