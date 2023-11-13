@@ -1,14 +1,8 @@
 import React, { forwardRef, Ref, useCallback, useMemo, useState } from "react";
-import { Classes, CommonComponentProps, hexToRgba } from "./common";
 import styled, { withTheme } from "styled-components";
 import Text, { TextType } from "./Text";
-import {
-  ERROR_MESSAGE_NAME_EMPTY,
-  createMessage,
-  FORM_VALIDATION_INVALID_EMAIL,
-} from "constants/messages";
+import { createMessage, FORM_VALIDATION_INVALID_EMAIL, ERROR_MESSAGE_NAME_EMPTY } from "constants/messages";
 import { isEmail } from "utils/formhelpers";
-
 import { AsyncControllableInput } from "@blueprintjs/core/lib/esnext/components/forms/asyncControllableInput";
 
 export type Validator = (
@@ -37,7 +31,7 @@ export function notEmptyValidator(value: string) {
   };
 }
 
-export type TextInputProps = CommonComponentProps & {
+export type TextInputProps = {
   placeholder?: string;
   fill?: boolean;
   defaultValue?: string;
@@ -81,27 +75,7 @@ const boxStyles = (
   return { bgColor, color, borderColor };
 };
 
-const StyledInput = styled((props) => {
-  // we are removing non input related props before passing them in the components
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {
-    inputStyle,
-    inputRef,
-    dataType,
-    theme,
-    isValid,
-    ...inputProps
-  } = props;
-  return props.asyncControl ? (
-    <AsyncControllableInput
-      {...inputProps}
-      inputRef={inputRef}
-      dataType={dataType}
-    />
-  ) : (
-    <input {...inputProps} />
-  );
-})<TextInputProps & { inputStyle: boxReturnType; isValid: boolean }>`
+const StyledInput = styled.input<TextInputProps & { inputStyle: boxReturnType; isValid: boolean }>`
   width: ${(props) => (props.fill ? "100%" : "320px")};
   border-radius: 0;
   outline: 0;
@@ -162,6 +136,7 @@ const ErrorWrapper = styled.div`
   position: absolute;
   bottom: -17px;
 `;
+
 const TextInput = forwardRef(
   (props: TextInputProps, ref: Ref<HTMLInputElement>) => {
     const initialValidation = () => {
