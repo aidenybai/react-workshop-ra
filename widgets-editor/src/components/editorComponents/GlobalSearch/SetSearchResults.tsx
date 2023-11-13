@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { connectHits } from "react-instantsearch-dom";
 import { Hit as IHit } from "react-instantsearch-core";
 import { debounce } from "lodash";
@@ -9,20 +9,22 @@ type Props = {
   hits: IHit[];
 };
 
-const SearchResults = ({ hits, setDocumentationSearchResults }: Props) => {
-  const debounsedSetter = useCallback(
-    debounce(setDocumentationSearchResults, 100),
-    [],
+const SetSearchResults = ({ hits, setDocumentationSearchResults }: Props) => {
+  const debouncedSetter = useCallback(
+    debounce((filteredHits: IHit[]) => {
+      const filteredDocs = filteredHits.filter(
+        (doc: SearchItem) => doc.kind === SEARCH_ITEM_TYPES.document
+      );
+      setDocumentationSearchResults(filteredDocs as any);
+    }, 100),
+    [setDocumentationSearchResults]
   );
 
   useEffect(() => {
-    const filteredHits = hits.filter(
-      (doc: SearchItem) => doc.kind === SEARCH_ITEM_TYPES.document,
-    );
-    debounsedSetter(filteredHits as any);
-  }, [hits]);
+    debouncedSetter(hits);
+  }, [hits, debouncedSetter]);
 
   return null;
 };
 
-export default connectHits<Props, IHit>(SearchResults);
+export default connectHits<Props, IHit>(SetSearchResults);
