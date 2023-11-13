@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
-// import { Button, Collapse, Pre } from "@blueprintjs/core";
 import { Icon } from "@blueprintjs/core";
-import styled from "constants/DefaultTheme";
+import styled from "styled-components";
 
 interface CollapsibleHelpProps {
   children?: ReactNode;
@@ -24,7 +23,6 @@ const Container = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-
   margin-top: 18px;
   margin-bottom: 19px;
   margin-left: 6px;
@@ -41,7 +39,6 @@ const LeftBar = styled.div`
 `;
 
 export default function CollapsibleHelp(props: CollapsibleHelpProps) {
-  //   const [isOpen, setIsOpen] = useState(false);
   return (
     <Container>
       <LeftBar />
