@@ -10,6 +10,7 @@ const PositionedWidget = styled.div`
     z-index: 1;
   }
 `;
+
 type PositionedContainerProps = {
   style: BaseStyle;
   children: ReactNode;
@@ -17,15 +18,19 @@ type PositionedContainerProps = {
   widgetType: string;
 };
 
-export const PositionedContainer = (props: PositionedContainerProps) => {
+const PositionedContainer = (props: PositionedContainerProps) => {
   const x = props.style.xPosition + (props.style.xPositionUnit || "px");
   const y = props.style.yPosition + (props.style.yPositionUnit || "px");
   const padding = WIDGET_PADDING;
   const openPropertyPane = useClickOpenPropPane();
 
+  const handleOpenPropertyPane = () => {
+    openPropertyPane();
+  };
+
   return (
     <PositionedWidget
-      onClickCapture={openPropertyPane}
+      onClickCapture={handleOpenPropertyPane}
       style={{
         position: "absolute",
         left: x,
@@ -35,7 +40,6 @@ export const PositionedContainer = (props: PositionedContainerProps) => {
         padding: padding + "px",
       }}
       id={props.widgetId}
-      //Before you remove: This is used by property pane to reference the element
       className={
         generateClassName(props.widgetId) +
         " " +
