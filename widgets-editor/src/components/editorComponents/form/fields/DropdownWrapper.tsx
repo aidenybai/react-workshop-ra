@@ -1,5 +1,5 @@
-import Dropdown from "components/ads/Dropdown";
 import React, { useEffect, useState } from "react";
+import Dropdown from "components/ads/Dropdown";
 
 type DropdownWrapperProps = {
   placeholder: string;
@@ -11,18 +11,19 @@ type DropdownWrapperProps = {
 };
 
 const DropdownWrapper = (props: DropdownWrapperProps) => {
-  const [selectedOption, setSelectedOption] = useState({
-    value: props.placeholder,
-  });
+  const [selectedOption, setSelectedOption] = useState<string>(props.placeholder);
+
   const onSelectHandler = (value?: string) => {
-    props.input && props.input.onChange && props.input.onChange(value);
+    if (props.input && props.input.onChange) {
+      props.input.onChange(value);
+    }
   };
 
   useEffect(() => {
     if (props.input && props.input.value) {
-      setSelectedOption({ value: props.input.value });
-    } else if (props.placeholder) {
-      setSelectedOption({ value: props.placeholder });
+      setSelectedOption(props.input.value);
+    } else {
+      setSelectedOption(props.placeholder);
     }
   }, [props.input, props.placeholder]);
 
