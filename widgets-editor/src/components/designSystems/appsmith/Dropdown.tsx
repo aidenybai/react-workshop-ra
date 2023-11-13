@@ -1,8 +1,6 @@
 import React from "react";
 import Select from "react-select";
-
 import { WrappedFieldInputProps } from "redux-form";
-import { theme } from "constants/DefaultTheme";
 import { SelectComponentsConfig } from "react-select/src/components";
 
 export type DropdownProps = {
@@ -52,7 +50,7 @@ const selectStyles = {
   indicatorSeparator: () => ({}),
 };
 
-export const BaseDropdown = (props: DropdownProps) => {
+export const Dropdown = (props: DropdownProps) => {
   const { input, customSelectStyles } = props;
   return (
     <Select
@@ -66,9 +64,3 @@ export const BaseDropdown = (props: DropdownProps) => {
     />
   );
 };
-
-const Dropdown = (props: DropdownProps) => {
-  return <BaseDropdown {...props} />;
-};
-
-export default Dropdown;
