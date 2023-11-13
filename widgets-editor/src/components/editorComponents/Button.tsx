@@ -1,18 +1,6 @@
 import React from "react";
-import {
-  Intent,
-  BlueprintButtonIntentsCSS,
-  Skin,
-} from "constants/DefaultTheme";
 import styled, { css } from "styled-components";
-import {
-  AnchorButton as BlueprintAnchorButton,
-  Button as BlueprintButton,
-  Intent as BlueprintIntent,
-  IconName,
-  MaybeElement,
-  IButtonProps,
-} from "@blueprintjs/core";
+import { Button as BlueprintButton, Intent as BlueprintIntent, IconName, MaybeElement, IButtonProps } from "@blueprintjs/core";
 import { Direction, Directions } from "utils/helpers";
 import { omit } from "lodash";
 
@@ -63,15 +51,6 @@ const StyledButton = styled((props: IButtonProps & Partial<ButtonProps>) => (
 ))`
   ${buttonStyles}
 `;
-const StyledAnchorButton = styled(
-  (props: IButtonProps & Partial<ButtonProps>) => (
-    <BlueprintAnchorButton
-      {...omit(props, ["iconAlignment", "fluid", "filled", "outline"])}
-    />
-  ),
-)`
-  ${buttonStyles}
-`;
 
 export type ButtonProps = {
   outline?: boolean;
@@ -79,7 +58,6 @@ export type ButtonProps = {
   intent?: Intent;
   text?: string;
   onClick?: () => void;
-  href?: string;
   icon?: string | MaybeElement;
   iconAlignment?: Direction;
   loading?: boolean;
@@ -120,25 +98,15 @@ export const Button = (props: ButtonProps) => {
     skin: props.skin,
     iconAlignment: props.iconAlignment ? props.iconAlignment : undefined,
   };
-  if (props.href) {
-    return (
-      <StyledAnchorButton
-        icon={icon}
-        rightIcon={rightIcon}
-        {...baseProps}
-        href={props.href}
-        target={props.target}
-      />
-    );
-  } else
-    return (
-      <StyledButton
-        rightIcon={rightIcon}
-        icon={icon}
-        {...baseProps}
-        onClick={props.onClick}
-      />
-    );
+
+  return (
+    <StyledButton
+      rightIcon={rightIcon}
+      icon={icon}
+      {...baseProps}
+      onClick={props.onClick}
+    />
+  );
 };
 
 export default Button;
