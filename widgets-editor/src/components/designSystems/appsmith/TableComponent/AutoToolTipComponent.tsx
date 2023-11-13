@@ -28,7 +28,7 @@ interface Props {
   columnType?: string;
 }
 
-const LinkWrapper = (props: Props) => {
+const AutoToolTipComponent = (props: Props) => {
   const ref = createRef<HTMLDivElement>();
   const [useToolTip, updateToolTip] = useState(false);
   useEffect(() => {
@@ -39,17 +39,50 @@ const LinkWrapper = (props: Props) => {
       updateToolTip(false);
     }
   }, [ref]);
-  return (
-    <CellWrapper
-      isHidden={props.isHidden}
-      cellProperties={props.cellProperties}
-      isHyperLink
-      useLinkToolTip={useToolTip}
-      onClick={() => {
-        window.open(props.title, "_blank");
-      }}
-    >
-      <div ref={ref} className="link-text">
+
+  const handleLinkClick = () => {
+    window.open(props.title, "_blank");
+  };
+
+  if (props.columnType === ColumnTypes.URL) {
+    return (
+      <CellWrapper
+        isHidden={props.isHidden}
+        cellProperties={props.cellProperties}
+        isHyperLink
+        useLinkToolTip={useToolTip}
+        onClick={handleLinkClick}
+      >
+        <div ref={ref} className="link-text">
+          {useToolTip && props.children ? (
+            <Tooltip
+              autoFocus={false}
+              hoverOpenDelay={1000}
+              content={
+                <TooltipContentWrapper width={(props.tableWidth || 300) - 32}>
+                  {props.title}
+                </TooltipContentWrapper>
+              }
+              position="top"
+            >
+              {props.children}
+            </Tooltip>
+          ) : (
+            props.children
+          )}
+        </div>
+        <OpenNewTabIconWrapper className="hidden-icon">
+          <OpenNewTabIcon />
+        </OpenNewTabIconWrapper>
+      </CellWrapper>
+    );
+  } else {
+    return (
+      <CellWrapper
+        ref={ref}
+        isHidden={props.isHidden}
+        cellProperties={props.cellProperties}
+      >
         {useToolTip && props.children ? (
           <Tooltip
             autoFocus={false}
@@ -66,52 +99,9 @@ const LinkWrapper = (props: Props) => {
         ) : (
           props.children
         )}
-      </div>
-      <OpenNewTabIconWrapper className="hidden-icon">
-        <OpenNewTabIcon />
-      </OpenNewTabIconWrapper>
-    </CellWrapper>
-  );
-};
-
-const AutoToolTipComponent = (props: Props) => {
-  const ref = createRef<HTMLDivElement>();
-  const [useToolTip, updateToolTip] = useState(false);
-  useEffect(() => {
-    const element = ref.current;
-    if (element && element.offsetWidth < element.scrollWidth) {
-      updateToolTip(true);
-    } else {
-      updateToolTip(false);
-    }
-  }, [ref]);
-  if (props.columnType === ColumnTypes.URL) {
-    return <LinkWrapper {...props} />;
+      </CellWrapper>
+    );
   }
-  return (
-    <CellWrapper
-      ref={ref}
-      isHidden={props.isHidden}
-      cellProperties={props.cellProperties}
-    >
-      {useToolTip && props.children ? (
-        <Tooltip
-          autoFocus={false}
-          hoverOpenDelay={1000}
-          content={
-            <TooltipContentWrapper width={(props.tableWidth || 300) - 32}>
-              {props.title}
-            </TooltipContentWrapper>
-          }
-          position="top"
-        >
-          {props.children}
-        </Tooltip>
-      ) : (
-        props.children
-      )}
-    </CellWrapper>
-  );
 };
 
 export default AutoToolTipComponent;
