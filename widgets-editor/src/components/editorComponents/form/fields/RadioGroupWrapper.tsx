@@ -1,8 +1,7 @@
-import RadioComponent from "components/ads/Radio";
 import React, { useEffect, useState } from "react";
 import { WrappedFieldInputProps } from "redux-form";
 
-export type RadioGroupWrapperProps = {
+type RadioGroupWrapperProps = {
   placeholder: string;
   input: WrappedFieldInputProps;
   options: Array<{ value: string; label: string }>;
@@ -13,15 +12,13 @@ export type RadioGroupWrapperProps = {
 
 const RadioGroupWrapper = (props: RadioGroupWrapperProps) => {
   const selectedValueHandler = () => {
-    if (
-      props.input &&
-      props.input.value &&
-      Object.keys(props.input.value).length > 0
-    ) {
-      return props.input.value.value;
-    } else if (props.input && typeof props.input.value === "string") {
-      return props.input.value;
-    } else if (props.placeholder) {
+    if (props.input && props.input.value) {
+      if (typeof props.input.value === "string") {
+        return props.input.value;
+      } else {
+        return props.input.value.value;
+      }
+    } else {
       return props.placeholder;
     }
   };
