@@ -22,12 +22,11 @@ export const FormDialogComponent = (props: FormDialogComponentProps) => {
     setIsOpen(false);
   }, []);
 
-  // track if the dialog is open to close it when clicking cancel within the form
   const onOpening = useCallback(() => {
     setIsOpen(true);
   }, []);
 
-  const Form = props.Form;
+  const FormComponent = props.Form;
 
   if (
     props.permissions &&
@@ -46,7 +45,7 @@ export const FormDialogComponent = (props: FormDialogComponentProps) => {
         trigger={props.trigger}
         onOpening={onOpening}
       >
-        <Form
+        <FormComponent
           onCancel={onClose}
           orgId={props.orgId}
           applicationId={props.applicationId}
