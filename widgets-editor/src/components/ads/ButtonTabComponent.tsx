@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { ControlIcons, ControlIconName } from "icons/ControlIcons";
 
 const ItemWrapper = styled.div<{ selected: boolean }>`
   width: 32px;
@@ -45,8 +44,6 @@ const ButtonTabComponent = (props: ButtonTabComponentProps) => {
   return (
     <FlexWrapper>
       {props.options.map((option: ButtonTabOption, index: number) => {
-        const controlIconName: ControlIconName = option.icon;
-        const ControlIcon = ControlIcons[controlIconName];
         const isSelected = props.values.includes(option.value);
         return (
           <ItemWrapper
@@ -55,7 +52,7 @@ const ButtonTabComponent = (props: ButtonTabComponentProps) => {
             onClick={() => props.selectButton(option.value)}
             className={`t--button-tab-${option.value}`}
           >
-            <ControlIcon width={24} height={24} />
+            <img src={option.icon} alt={option.value} width={24} height={24} />
           </ItemWrapper>
         );
       })}
