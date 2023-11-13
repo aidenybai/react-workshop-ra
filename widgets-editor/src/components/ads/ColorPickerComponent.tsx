@@ -1,12 +1,6 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import {
-  Popover,
-  InputGroup,
-  PopoverInteractionKind,
-  Position,
-  Classes,
-} from "@blueprintjs/core";
+import { Popover, InputGroup, PopoverInteractionKind, Position, Classes } from "@blueprintjs/core";
 import CheckedIcon from "assets/icons/control/checkmark.svg";
 import { debounce } from "lodash";
 
@@ -149,11 +143,8 @@ interface ColorPickerProps {
 }
 
 const ColorPickerComponent = (props: ColorPickerProps) => {
-  const [color, setColor] = React.useState(props.color);
-  const debouncedOnChange = React.useCallback(
-    debounce(props.changeColor, 500),
-    [props.changeColor],
-  );
+  const [color, setColor] = useState(props.color);
+  const debouncedOnChange = useCallback(debounce(props.changeColor, 500), [props.changeColor]);
   const handleChangeColor = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     debouncedOnChange(value);
