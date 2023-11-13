@@ -1,14 +1,7 @@
-import React, { ChangeEvent } from "react";
-import {
-  EditorModes,
-  EditorSize,
-  EditorTheme,
-  TabBehaviour,
-} from "components/editorComponents/CodeEditor/EditorConfig";
+import React, { ChangeEvent, lazy, Suspense } from "react";
+import { EditorProps, EditorModes, EditorSize, EditorTheme, TabBehaviour } from "components/editorComponents/CodeEditor/EditorConfig";
 
-const CodeEditorLazy = React.lazy(() =>
-  import("components/editorComponents/CodeEditor"),
-);
+const CodeEditor = lazy(() => import("components/editorComponents/CodeEditor"));
 
 interface Props {
   input: {
@@ -34,7 +27,11 @@ const ReadOnlyEditor = (props: Props) => {
     borderLess: true,
     folding: props.folding,
   };
-  return <CodeEditorLazy {...editorProps} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CodeEditor {...editorProps} />
+    </Suspense>
+  );
 };
 
 export default ReadOnlyEditor;
