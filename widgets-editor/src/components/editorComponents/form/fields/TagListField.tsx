@@ -1,24 +1,7 @@
 import React from "react";
-import {
-  Field,
-  WrappedFieldMetaProps,
-  WrappedFieldInputProps,
-} from "redux-form";
+import { Field, WrappedFieldMetaProps, WrappedFieldInputProps } from "redux-form";
 import TagInputComponent from "components/ads/TagInputComponent";
 import { Intent } from "constants/DefaultTheme";
-
-const renderComponent = (
-  componentProps: TagListFieldProps & {
-    meta: Partial<WrappedFieldMetaProps>;
-    input: Partial<WrappedFieldInputProps>;
-  },
-) => {
-  return (
-    <React.Fragment>
-      <TagInputComponent {...componentProps} />
-    </React.Fragment>
-  );
-};
 
 type TagListFieldProps = {
   name: string;
@@ -27,6 +10,17 @@ type TagListFieldProps = {
   label: string;
   intent: Intent;
   customError: (err: string) => void;
+};
+
+const renderComponent = (componentProps: TagListFieldProps & {
+  meta: Partial<WrappedFieldMetaProps>;
+  input: Partial<WrappedFieldInputProps>;
+}) => {
+  return (
+    <React.Fragment>
+      <TagInputComponent {...componentProps} />
+    </React.Fragment>
+  );
 };
 
 const TagListField = (props: TagListFieldProps) => {
