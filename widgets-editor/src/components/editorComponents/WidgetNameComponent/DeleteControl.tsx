@@ -3,6 +3,7 @@ import { Tooltip } from "@blueprintjs/core";
 import styled from "styled-components";
 import { ControlIcons } from "icons/ControlIcons";
 import { Colors } from "constants/Colors";
+
 const DeleteIcon = ControlIcons.DELETE_CONTROL;
 const deleteControlIcon = <DeleteIcon height={14} width={10} />;
 
