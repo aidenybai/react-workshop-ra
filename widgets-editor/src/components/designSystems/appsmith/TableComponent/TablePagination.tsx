@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-// TODO(vikcy): Fix the banned types in this file
 import React from "react";
 import { Icon, IconName } from "@blueprintjs/core";
 import styled from "styled-components";
@@ -9,11 +7,18 @@ const PagerContainer = styled.div`
     height: 49px;
   }
 `;
-function PagerIcon(props: {
+
+interface PagerIconProps {
   icon: IconName;
-  onClick: Function;
+  onClick: () => void;
   className: string;
-}) {
+}
+
+const PagerIcon: React.FC<PagerIconProps> = (props) => {
+  const handleIconClick = () => {
+    props.onClick();
+  };
+
   return (
     <Icon
       className={props.className}
@@ -23,14 +28,15 @@ function PagerIcon(props: {
       }}
       icon={props.icon}
       iconSize={14}
-      onClick={props.onClick as any}
+      onClick={handleIconClick}
     ></Icon>
   );
-}
+};
+
 interface PagerProps {
   pageNo: number;
-  prevPageClick: Function;
-  nextPageClick: Function;
+  prevPageClick: () => void;
+  nextPageClick: () => void;
 }
 
 const PageWrapper = styled.div`
@@ -41,7 +47,7 @@ const PageWrapper = styled.div`
   }
 `;
 
-export function TablePagination(props: PagerProps) {
+export const TablePagination: React.FC<PagerProps> = (props) => {
   return (
     <PagerContainer className={"e-control e-pager e-lib"}>
       <PageWrapper>
@@ -75,4 +81,4 @@ export function TablePagination(props: PagerProps) {
       </PageWrapper>
     </PagerContainer>
   );
-}
+};
