@@ -1,14 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { ComponentProps } from "components/designSystems/appsmith/BaseComponent";
 import { RadioOption } from "widgets/RadioGroupWidget";
-import {
-  RadioGroup,
-  Radio,
-  ControlGroup,
-  Label,
-  Classes,
-} from "@blueprintjs/core";
+import { RadioGroup, Radio, ControlGroup, Label, Classes } from "@blueprintjs/core";
 import { WIDGET_PADDING } from "constants/WidgetConstants";
 import { BlueprintControlTransform, labelStyle } from "constants/DefaultTheme";
 
@@ -72,12 +65,11 @@ class RadioGroupComponent extends React.Component<RadioGroupComponentProps> {
   };
 }
 
-export interface RadioGroupComponentProps extends ComponentProps {
+export interface RadioGroupComponentProps {
   label: string;
   options: RadioOption[];
   onRadioSelectionChange: (updatedOptionValue: string) => void;
   selectedOptionValue: string;
   isLoading: boolean;
 }
-
 export default RadioGroupComponent;
