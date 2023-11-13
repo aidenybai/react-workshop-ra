@@ -1,71 +1,61 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component, ReactNode, useRef, useState } from "react";
 import styled from "styled-components";
 import { MenuItem, Menu, ControlGroup, InputGroup } from "@blueprintjs/core";
 import { BaseButton } from "components/designSystems/blueprint/ButtonComponent";
-import {
-  ItemRenderer,
-  Select,
-  ItemListRenderer,
-  IItemListRendererProps,
-} from "@blueprintjs/select";
+import { Select, ItemListRenderer, IItemListRendererProps } from "@blueprintjs/select";
 import { DropdownOption } from "widgets/DropdownWidget";
 
 const Dropdown = Select.ofType<DropdownOption>();
 const StyledDropdown = styled(Dropdown)``;
 
-class DropdownComponent extends Component<DropdownComponentProps> {
-  private newItemTextInput: HTMLInputElement | null = null;
-  private setNewItemTextInput = (element: HTMLInputElement | null) => {
-    this.newItemTextInput = element;
+const DropdownComponent: React.FC<DropdownComponentProps> = ({
+  options,
+  selectHandler,
+  selected,
+  autocomplete,
+  addItem,
+  toggle,
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const newItemTextInput = useRef<HTMLInputElement | null>(null);
+
+  const showTextBox = (): void => {
+    setIsEditing(true);
   };
 
-  public state = {
-    isEditing: false,
+  const handleAddItem = (): void => {
+    addItem?.addItemHandler(newItemTextInput.current?.value || "");
+    setIsEditing(false);
   };
 
-  showTextBox = (): void => {
-    this.setState({
-      isEditing: true,
-    });
-  };
-
-  handleAddItem = (): void => {
-    this.props.addItem &&
-      this.newItemTextInput &&
-      this.props.addItem.addItemHandler(this.newItemTextInput.value);
-    this.setState({
-      isEditing: false,
-    });
-  };
-
-  renderItemList: ItemListRenderer<DropdownOption> = (
-    props: IItemListRendererProps<DropdownOption>,
+  const renderItemList: ItemListRenderer<DropdownOption> = (
+    props: IItemListRendererProps<DropdownOption>
   ) => {
-    if (this.props.addItem) {
+    if (addItem) {
       const renderItems = props.items.map(props.renderItem).filter(Boolean);
       const displayMode = (
         <BaseButton
           icon-right="plus"
           accent="primary"
           filled={true}
-          text={this.props.addItem.displayText}
-          onClick={this.showTextBox}
+          text={addItem.displayText}
+          onClick={showTextBox}
         />
       );
       const editMode = (
         <ControlGroup fill={true}>
-          <InputGroup inputRef={this.setNewItemTextInput} />
+          <InputGroup inputRef={newItemTextInput} />
           <BaseButton
             filled={true}
-            text={this.props.addItem.displayText}
-            onClick={this.handleAddItem}
+            text={addItem.displayText}
+            onClick={handleAddItem}
           ></BaseButton>
         </ControlGroup>
       );
       return (
         <Menu ulRef={props.itemsParentRef}>
           {renderItems}
-          {!this.state.isEditing ? displayMode : editMode}
+          {!isEditing ? displayMode : editMode}
         </Menu>
       );
     }
@@ -73,7 +63,7 @@ class DropdownComponent extends Component<DropdownComponentProps> {
     return <React.Fragment />;
   };
 
-  searchItem = (query: string, option: DropdownOption): boolean => {
+  const searchItem = (query: string, option: DropdownOption): boolean => {
     return (
       option.label.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
       option.value.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
@@ -81,13 +71,14 @@ class DropdownComponent extends Component<DropdownComponentProps> {
         option.label.toLowerCase().indexOf(query.toLowerCase()) > -1)
     );
   };
-  onItemSelect = (item: DropdownOption): void => {
-    this.props.selectHandler(item.value);
+
+  const onItemSelect = (item: DropdownOption): void => {
+    selectHandler(item.value);
   };
 
-  renderItem: ItemRenderer<DropdownOption> = (
+  const renderItem: ItemRenderer<DropdownOption> = (
     option: DropdownOption,
-    { handleClick, modifiers },
+    { handleClick, modifiers }
   ) => {
     if (!modifiers.matchesPredicate) {
       return null;
@@ -103,11 +94,12 @@ class DropdownComponent extends Component<DropdownComponentProps> {
       />
     );
   };
-  getSelectedDisplayText = () => {
-    if (this.props.selected) {
-      const selectedValue = this.props.selected.value;
-      const item: DropdownOption | undefined = this.props.options.find(
-        (option) => option.value === selectedValue,
+
+  const getSelectedDisplayText = () => {
+    if (selected) {
+      const selectedValue = selected.value;
+      const item: DropdownOption | undefined = options.find(
+        (option) => option.value === selectedValue
       );
 
       return item && (item.label || item.label);
@@ -115,31 +107,29 @@ class DropdownComponent extends Component<DropdownComponentProps> {
     return "";
   };
 
-  render() {
-    return (
-      <StyledDropdown
-        items={this.props.options}
-        onItemSelect={this.onItemSelect}
-        itemRenderer={this.renderItem}
-        itemListRenderer={this.props.addItem && this.renderItemList}
-        filterable={!!this.props.autocomplete}
-        itemPredicate={this.searchItem}
-        itemsEqual="value"
-        popoverProps={{ minimal: true }}
-        activeItem={this.props.selected}
-        noResults={<MenuItem disabled={true} text="No results." />}
-      >
-        {this.props.toggle || (
-          <BaseButton
-            accent="secondary"
-            text={this.getSelectedDisplayText()}
-            rightIcon="chevron-down"
-          />
-        )}
-      </StyledDropdown>
-    );
-  }
-}
+  return (
+    <StyledDropdown
+      items={options}
+      onItemSelect={onItemSelect}
+      itemRenderer={renderItem}
+      itemListRenderer={addItem && renderItemList}
+      filterable={!!autocomplete}
+      itemPredicate={searchItem}
+      itemsEqual="value"
+      popoverProps={{ minimal: true }}
+      activeItem={selected}
+      noResults={<MenuItem disabled={true} text="No results." />}
+    >
+      {toggle || (
+        <BaseButton
+          accent="secondary"
+          text={getSelectedDisplayText()}
+          rightIcon="chevron-down"
+        />
+      )}
+    </StyledDropdown>
+  );
+};
 
 export interface DropdownComponentProps {
   options: DropdownOption[];
