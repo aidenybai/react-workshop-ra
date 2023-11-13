@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import styled from "styled-components";
 import * as Sentry from "@sentry/react";
 
@@ -14,48 +14,39 @@ const ErrorBoundaryContainer = styled.div`
     width: 100%;
   }
 `;
-// border: 1px solid;
-// border-color: ${({ isValid, theme }) =>
-//   isValid ? "transparent" : theme.colors.error};
 
 const RetryLink = styled.span`
   color: ${(props) => props.theme.colors.primaryDarkest};
   cursor: pointer;
 `;
 
-class ErrorBoundary extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { hasError: false };
-  }
+const ErrorBoundary: React.FC<Props> = ({ children }) => {
+  const [hasError, setHasError] = useState(false);
 
-  static getDerivedStateFromError() {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
-  }
+  const handleRetry = () => {
+    setHasError(false);
+  };
 
-  componentDidCatch(error: any, errorInfo: any) {
+  const handleCatch = (error: any, errorInfo: any) => {
     console.error({ error, errorInfo });
     Sentry.captureException(error);
-  }
+  };
 
-  render() {
-    return (
-      <ErrorBoundaryContainer>
-        {this.state.hasError ? (
-          <p>
-            Oops, Something went wrong.
-            <br />
-            <RetryLink onClick={() => this.setState({ hasError: false })}>
-              Click here to retry
-            </RetryLink>
-          </p>
-        ) : (
-          this.props.children
-        )}
-      </ErrorBoundaryContainer>
-    );
-  }
-}
+  return (
+    <ErrorBoundaryContainer>
+      {hasError ? (
+        <p>
+          Oops, Something went wrong.
+          <br />
+          <RetryLink onClick={handleRetry}>
+            Click here to retry
+          </RetryLink>
+        </p>
+      ) : (
+        children
+      )}
+    </ErrorBoundaryContainer>
+  );
+};
 
 export default ErrorBoundary;
