@@ -1,25 +1,22 @@
 import React from "react";
 import { Field, BaseFieldProps } from "redux-form";
-import {
-  BaseTextInput,
-  TextInputProps,
-} from "components/designSystems/appsmith/TextInputComponent";
+import { BaseTextInput, TextInputProps } from "components/designSystems/appsmith/TextInputComponent";
 
-type FieldProps = {
+type TextFieldProps = {
   type?: string;
+  disabled?: boolean;
 };
 
-class TextField extends React.Component<
-  BaseFieldProps & TextInputProps & FieldProps
-> {
+class TextField extends React.Component<BaseFieldProps & TextInputProps & TextFieldProps> {
   render() {
+    const { type, disabled, ...rest } = this.props;
     return (
       <Field
-        type={this.props.type || "text"}
+        type={type || "text"}
         component={BaseTextInput}
-        {...this.props}
+        {...rest}
         noValidate
-        disabled={this.props.disabled}
+        disabled={disabled}
       />
     );
   }
