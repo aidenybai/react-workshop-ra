@@ -1,4 +1,3 @@
-import { Datasource } from "entities/Datasource";
 import { useEffect, useState } from "react";
 
 export type RecentEntity = {
@@ -30,7 +29,6 @@ export type DocSearchItem = {
 
 export type SearchItem = DocSearchItem | Datasource | any;
 
-// todo better checks here?
 export const getItemType = (item: SearchItem): SEARCH_ITEM_TYPES => {
   let type: SEARCH_ITEM_TYPES;
   if (item.widgetName) type = SEARCH_ITEM_TYPES.widget;
