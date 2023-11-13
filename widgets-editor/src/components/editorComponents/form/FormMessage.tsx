@@ -18,44 +18,40 @@ export type MessageAction = {
 };
 
 const StyledMessage = styled.div`
-  & {
-    width: 100%;
-    padding: ${(props) => props.theme.spaces[8]}px;
-    font-size: ${(props) => props.theme.fontSizes[4]}px;
-    background: ${(props) =>
-      getColorWithOpacity(props.theme.colors.messageBG, 0.4)};
-    text-align: left;
-    margin-bottom: ${(props) => props.theme.spaces[4]}px;
-  }
+  width: 100%;
+  padding: ${(props) => props.theme.spaces[8]}px;
+  font-size: ${(props) => props.theme.fontSizes[4]}px;
+  background: ${(props) =>
+    getColorWithOpacity(props.theme.colors.messageBG, 0.4)};
+  text-align: left;
+  margin-bottom: ${(props) => props.theme.spaces[4]}px;
 `;
 
 const MessageContainer = styled.div<{ iconbgcolor: string }>`
-  & {
-    display: flex;
-    justify-content: flex-start;
-    & > div {
-      position: relative;
-      align-self: flex-start;
-      &:before {
-        content: "";
-        position: absolute;
-        width: 32px;
-        height: 32px;
-        background: ${(props) => props.iconbgcolor};
-        border-radius: 50%;
-        left: -6px;
-        top: -6px;
-        z-index: 0;
-      }
-      svg {
-        position: aboslute;
-        z-index: 1;
-      }
+  display: flex;
+  justify-content: flex-start;
+  & > div {
+    position: relative;
+    align-self: flex-start;
+    &:before {
+      content: "";
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: ${(props) => props.iconbgcolor};
+      border-radius: 50%;
+      left: -6px;
+      top: -6px;
+      z-index: 0;
     }
-    p {
-      margin: 0 ${(props) => props.theme.spaces[8]}px;
-      align-self: flex-start;
+    svg {
+      position: absolute;
+      z-index: 1;
     }
+  }
+  p {
+    margin: 0 ${(props) => props.theme.spaces[8]}px;
+    align-self: flex-start;
   }
 `;
 
