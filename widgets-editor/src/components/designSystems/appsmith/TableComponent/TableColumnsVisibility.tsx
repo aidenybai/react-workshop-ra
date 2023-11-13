@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Popover,
   Classes,
@@ -89,7 +89,7 @@ const VisibilityIcon = (props: { visible?: boolean }) => {
 };
 
 const TableColumnsVisibility = (props: TableColumnsVisibilityProps) => {
-  const [selected, selectMenu] = React.useState(false);
+  const [selected, selectMenu] = useState(false);
   if (props.columns.length === 0) {
     return (
       <TableIconWrapper disabled>
