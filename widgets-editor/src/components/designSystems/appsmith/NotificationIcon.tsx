@@ -1,7 +1,19 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { hexToRgb } from "utils/AppsmithUtils";
 
-export default styled.span<{
+const pulseAnimation = (color: string) => keyframes`
+  0% {
+    box-shadow: 0 0 0 0 rgba(${hexToRgb(color)}, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(${hexToRgb(color)}, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(${hexToRgb(color)}, 0);
+  }
+`;
+
+const NotificationIcon = styled.span<{
   animate?: boolean;
   width?: number;
   height?: number;
@@ -14,57 +26,13 @@ export default styled.span<{
     border-radius: 50%;
     background: ${(props) => props.color || props.theme.colors.notification};
     cursor: pointer;
-    box-shadow: 0 0 0
-      rgba(
-        ${(props) => {
-          const rgb = hexToRgb(props.color || props.theme.colors.notification);
-          return `${rgb.r}, ${rgb.g}, ${rgb.b}`;
-        }},
-        0.4
-      );
-    animation: ${(props) => (!!props.animate ? "pulse 2s infinite" : "")};
+    box-shadow: 0 0 0 rgba(${(props) => hexToRgb(props.color || props.theme.colors.notification)}, 0.4);
+    animation: ${(props) => (!!props.animate ? pulseAnimation(props.color || props.theme.colors.notification) + " 2s infinite" : "")};
 
     &:hover {
       animation: none;
     }
-
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0
-          rgba(
-            ${(props) => {
-              const rgb = hexToRgb(
-                props.color || props.theme.colors.notification,
-              );
-              return `${rgb.r}, ${rgb.g}, ${rgb.b}`;
-            }},
-            0.4
-          );
-      }
-      70% {
-        box-shadow: 0 0 0 15px
-          rgba(
-            ${(props) => {
-              const rgb = hexToRgb(
-                props.color || props.theme.colors.notification,
-              );
-              return `${rgb.r}, ${rgb.g}, ${rgb.b}`;
-            }},
-            0
-          );
-      }
-      100% {
-        box-shadow: 0 0 0 0
-          rgba(
-            ${(props) => {
-              const rgb = hexToRgb(
-                props.color || props.theme.colors.notification,
-              );
-              return `${rgb.r}, ${rgb.g}, ${rgb.b}`;
-            }},
-            0
-          );
-      }
-    }
   }
 `;
+
+export default NotificationIcon;
