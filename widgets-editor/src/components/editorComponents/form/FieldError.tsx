@@ -1,9 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { IntentColors } from "constants/DefaultTheme";
-// Note: This component is only for the input fields which donot have the
-// popover error tooltip. This is also only for Appsmith components
-// Not to be used in widgets / canvas
 
 const StyledError = styled.span<{ show: boolean }>`
   text-align: left;
@@ -20,13 +17,13 @@ type FormFieldErrorProps = {
   className?: string;
 };
 
-export const FormFieldError = (props: FormFieldErrorProps) => {
+const FormFieldError: React.FC<FormFieldErrorProps> = (props) => {
   return (
     <StyledError
-      className={props.className ? props.className : undefined}
+      className={props.className}
       show={!!props.error}
     >
-      {props.error || "&nbsp;"}
+      {props.error || "\u00A0"}
     </StyledError>
   );
 };
