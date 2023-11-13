@@ -1,46 +1,33 @@
-import {
-  setHelperConfig,
-  showOnboardingHelper,
-} from "actions/onboardingActions";
-import {
-  OnboardingHelperConfig,
-  OnboardingStep,
-} from "constants/OnboardingConstants";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { OnboardingHelperConfig, OnboardingStep } from "constants/OnboardingConstants";
 import { getHelperConfig } from "sagas/OnboardingSagas";
 import { getCurrentUser } from "selectors/usersSelectors";
-import { useSelector } from "store";
+import { showOnboardingHelper, setHelperConfig } from "actions/onboardingActions";
 import { getOnboardingWelcomeState } from "utils/storage";
+import { RootState } from "store";
 import OnboardingHelper from "./Helper";
 
 const WelcomeHelper = () => {
-  const [showHelper, setShowHelper] = useState(false);
-  const currentUser = useSelector(getCurrentUser);
-  const showWelcomeHelper = useSelector(
-    (state) => state.ui.onBoarding.showWelcomeHelper,
-  );
-  const helperConfig = getHelperConfig(
-    OnboardingStep.WELCOME,
-  ) as OnboardingHelperConfig;
   const dispatch = useDispatch();
+  const currentUser = useSelector(getCurrentUser);
+  const showWelcomeHelper = useSelector((state: RootState) => state.ui.onBoarding.showWelcomeHelper);
+  const helperConfig = getHelperConfig(OnboardingStep.WELCOME) as OnboardingHelperConfig;
 
   useEffect(() => {
     const isInOnboarding = async () => {
       const inOnboarding = await getOnboardingWelcomeState();
 
       if (inOnboarding && currentUser) {
-        dispatch(dispatch(showOnboardingHelper(true)));
-
-        setShowHelper(true);
+        dispatch(showOnboardingHelper(true));
       }
     };
 
     dispatch(setHelperConfig(helperConfig));
     isInOnboarding();
-  }, [currentUser, showWelcomeHelper]);
+  }, [currentUser, dispatch]);
 
-  if (!showHelper) return null;
+  if (!showWelcomeHelper) return null;
 
   return <OnboardingHelper />;
 };
