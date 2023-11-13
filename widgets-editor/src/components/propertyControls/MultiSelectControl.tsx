@@ -6,15 +6,7 @@ import { StyledMultiSelectDropDown } from "./StyledControls";
 
 class MultiSelectControl extends BaseControl<MultiSelectControlProps> {
   render() {
-    const selectedItems: string[] = [];
-
-    _.map(this.props.propertyValue, (value) => {
-      const option = _.find(this.props.options, (option) => {
-        return option.value === value;
-      });
-      if (option) selectedItems.push(option.value as string);
-      return option;
-    });
+    const selectedItems: string[] = this.getSelectedItems();
 
     return (
       <StyledMultiSelectDropDown
@@ -29,6 +21,13 @@ class MultiSelectControl extends BaseControl<MultiSelectControlProps> {
       />
     );
   }
+
+  getSelectedItems = (): string[] => {
+    return this.props.propertyValue.map((value) => {
+      const option = this.props.options.find((option) => option.value === value);
+      return option ? option.value : "";
+    });
+  };
 
   onItemSelect = (value: string[]): void => {
     this.updateProperty(this.props.propertyName, value);
