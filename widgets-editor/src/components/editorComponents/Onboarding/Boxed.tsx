@@ -1,18 +1,15 @@
-import { OnboardingStep } from "constants/OnboardingConstants";
 import React, { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { getCurrentStep, inOnboarding } from "sagas/OnboardingSagas";
+import { OnboardingStep } from "constants/OnboardingConstants";
 
 type BoxedProps = {
-  // child nodes are not visible until this step is reached
   step: OnboardingStep;
-  // Any additional conditions to hide the children
   show?: boolean;
   alternative?: ReactNode;
   children: ReactNode;
 };
 
-// Boxed(or hidden).
 const Boxed: React.FC<BoxedProps> = (props: BoxedProps) => {
   const currentStep = useSelector(getCurrentStep);
   const onboarding = useSelector(inOnboarding);
@@ -21,7 +18,6 @@ const Boxed: React.FC<BoxedProps> = (props: BoxedProps) => {
     if (props.alternative) {
       return <>{props.alternative}</>;
     }
-
     return null;
   }
 
