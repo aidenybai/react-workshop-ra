@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Python script and write to file
         run: |
-          python 2fast4u/github_workflow/optimize_react_workshop_notes.py
+          python 2fast4u/github_workflow/optimize_react_workshop.py
 
       - name: Read output to variable
         id: script_output
@@ -70,6 +70,6 @@ jobs:
               --body "$log" \
               --base main \
               --head "$BRANCH_NAME" \
-              --label "perf"
+              --label "auto perf"
             git checkout main
           done
