@@ -87,6 +87,7 @@ const IconContainer = styled.span`
     margin-right: ${(props) => props.theme.spaces[5]}px;
   }
 `;
+
 const MenuItem = forwardRef(
   (props: MenuItemProps, ref: Ref<HTMLAnchorElement>) => {
     return props.ellipsize && props.text.length > props.ellipsize ? (
@@ -98,6 +99,7 @@ const MenuItem = forwardRef(
     );
   },
 );
+
 const MenuItemContent = forwardRef(
   (props: MenuItemProps, ref: Ref<HTMLAnchorElement>) => {
     return (
