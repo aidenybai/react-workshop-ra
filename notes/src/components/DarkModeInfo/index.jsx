@@ -3,8 +3,10 @@ import Button from "@mui/material/Button";
 import { DarkModeContext } from "../DarkModeContext";
 import "./index.css";
 
-function DarkModeInfo() {
+const DarkModeInfo = () => {
   const { mode } = useContext(DarkModeContext);
+
+  const handleClick = () => alert("Ha, thought you can click me?");
 
   return (
     <span>
@@ -12,7 +14,7 @@ function DarkModeInfo() {
       <Button
         classes={{ root: "dark-mode-info__button" }}
         size="small"
-        onClick={() => alert("Ha, thought you can click me?")}
+        onClick={handleClick}
       >
         {mode}
       </Button>
