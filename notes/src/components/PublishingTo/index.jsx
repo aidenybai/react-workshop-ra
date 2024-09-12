@@ -1,21 +1,23 @@
 import { observer } from "mobx-react-lite";
 import "./index.css";
 
-function PublishingTo({ publishingTarget, onPublishingTargetChange }) {
+const PublishingTo = observer(({ publishingTarget, onPublishingTargetChange }) => {
+  const handleButtonClick = () => {
+    const newTarget = prompt("New target?");
+    onPublishingTargetChange(newTarget);
+  };
+
   return (
     <>
       Publishing to: {publishingTarget}{" "}
       <button
         className="publishing-to__button"
-        onClick={() => {
-          const newTarget = prompt("New target?");
-          onPublishingTargetChange(newTarget);
-        }}
+        onClick={handleButtonClick}
       >
         (edit)
       </button>
     </>
   );
-}
+});
 
-export default observer(PublishingTo);
+export default PublishingTo;
