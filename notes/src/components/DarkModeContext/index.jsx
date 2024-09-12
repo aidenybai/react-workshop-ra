@@ -3,14 +3,15 @@ import "./index.css";
 
 export const DarkModeContext = createContext();
 
-export function DarkModeProvider({ children }) {
+export const DarkModeProvider = ({ children }) => {
   const [mode, setMode] = useState("light");
 
   useEffect(() => {
-    document.body.classList.add("theme-" + mode);
+    const theme = "theme-" + mode;
+    document.body.classList.add(theme);
 
     return () => {
-      document.body.classList.remove("theme-" + mode);
+      document.body.classList.remove(theme);
     };
   }, [mode]);
 
